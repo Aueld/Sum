@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
 
         isGameOver = false;
         comboSet = false;
+
         instance.StartCoroutine(instance.ComboSt());
     }
 
