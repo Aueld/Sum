@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,14 +26,18 @@ public class GameManager : MonoBehaviour
 
 
     // 게임 관련
-    public static int maxBlock = 2;
+    public static int maxBlock = 4;
     public static int textShadowCount;
 
+    public static bool isGameStart;
     public static bool isGameOver;
     public static bool comboSet;
 
     public GameObject UI;
     public GameObject UIGameOver;
+
+    public static bool btnNum;
+    public GameObject[] Button;
 
     // 카메라 효과 관련
     private static Camera mainCamera;
@@ -41,10 +46,36 @@ public class GameManager : MonoBehaviour
     public static float ShakeAmount = 0.05f;
     public static float ShakeTime = 0.2f;
     
-
-    private void Start()
+    
+    private void OnEnable()
     {
         Application.targetFrameRate = 60;
+
+        InitGame();
+    }
+
+    public void InitGame()
+    {
+
+        hit = 0;
+        combo = 0;
+        score = 0;
+        gameTime = 30;
+        playTime = 0;
+        absTime = 0;
+
+        playComboTime = 0;
+
+        if (SceneManager.GetActiveScene().name != "Main")
+        {
+            if (isGameStart)
+                isGameStart = false;
+
+            return;
+        }
+
+
+
         instance = this;
 
         mainCamera = Camera.main;
@@ -54,6 +85,28 @@ public class GameManager : MonoBehaviour
         comboSet = false;
 
         instance.StartCoroutine(instance.ComboSt());
+
+        if (SceneManager.GetActiveScene().name == "Main")
+        {
+            StartCoroutine(TouchWait());
+            
+            if (!btnNum)
+            {
+
+                maxBlock = 2;
+
+                Button[0].SetActive(false);
+                Button[1].SetActive(false);
+            }
+            else
+            {
+                maxBlock = 4;
+
+                Button[0].SetActive(true);
+                Button[1].SetActive(true);
+
+            }
+        }
     }
 
     // 성공
@@ -63,7 +116,13 @@ public class GameManager : MonoBehaviour
 
         hit++;
         combo++;
-        score += 1 + hit + (int) (combo * hit * 0.02f);
+
+        float bonus = 0;
+
+        if (btnNum)
+            bonus = 10f;
+
+        score += 1 + hit + (int)(combo * hit * 0.02f * bonus);
 
         if(playTime > 1)
             playTime -= 1f;
@@ -102,7 +161,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isGameOver)
+        if (!isGameStart || isGameOver)
             return;
 
         GameTimer();
@@ -130,11 +189,20 @@ public class GameManager : MonoBehaviour
     private IEnumerator UIMov()
     {
         Text text = UIGameOver.GetComponentInChildren<Text>();
-        iTween.MoveTo(text.gameObject, iTween.Hash("y", 1000, "Time", 3f, "easeType", iTween.EaseType.easeOutBounce));
+        GameObject button = GameObject.Find("Button");
+
+
+        button.SetActive(false);
+        iTween.MoveTo(text.gameObject, iTween.Hash("y", text.gameObject.transform.position.y / 2, "Time", 3f, "easeType", iTween.EaseType.easeOutBounce));
 
         yield return new WaitForSeconds(3f);
 
-        iTween.MoveTo(text.gameObject, iTween.Hash("y", -600, "Time", 2f, "easeType", iTween.EaseType.easeOutBounce));
+        iTween.MoveTo(text.gameObject, iTween.Hash("y", -text.gameObject.transform.position.y / 2, "Time", 2f, "easeType", iTween.EaseType.easeOutBounce));
+
+        yield return new WaitForSeconds(3f);
+
+        button.SetActive(true);
+
     }
 
     private static IEnumerator CameraMove()
@@ -157,5 +225,20 @@ public class GameManager : MonoBehaviour
 
             yield return wait;
         }
+    }
+
+    private static IEnumerator TouchWait()
+    {
+        while (true)
+        {
+            if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
+            {
+                isGameStart = true;
+                yield break;
+            }
+
+            yield return wait;
+        }
+
     }
 }

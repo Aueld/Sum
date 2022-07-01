@@ -8,13 +8,14 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    private string filePath;
-    private string message;
-    
+    protected string filePath;
+    protected string data;
+
+    protected List<int> sortScore = new List<int>();
+
     private string scoreData;
     private string[] splScore;
-    private List<int> sortScore = new List<int>();
-
+        
     private string scoreMax;
 
     //Test Update
@@ -23,9 +24,9 @@ public class DataManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
-            message = GameManager.score.ToString();
+            data = GameManager.score.ToString();
 
-            DataSave(filePath, message, 1);
+            DataSave(filePath, data, 1);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -40,7 +41,7 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    private void ScoreRank()
+    protected void ScoreRank()
     {
         filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
         scoreData = DataRead(filePath);
@@ -65,7 +66,7 @@ public class DataManager : MonoBehaviour
 
         foreach(int i in sortScore)
         {
-            if (count > 9)
+            if (count > 15) // 16등까지 데이터 저장
                 break;
             
             scoreMax += i + ",";
@@ -79,7 +80,7 @@ public class DataManager : MonoBehaviour
         DataSave(filePath, scoreMax, 0);
     }
 
-    void DataSave(string filePath, string message, int saveType)
+    protected void DataSave(string filePath, string message, int saveType)
     {
         DirectoryInfo directoryInfo = new DirectoryInfo(Path.GetDirectoryName(filePath));
 
@@ -102,8 +103,9 @@ public class DataManager : MonoBehaviour
         writer.Close();
     }
 
-    string DataRead(string filePath)
+    protected string DataRead(string filePath)
     {
+
         FileInfo fileInfo = new FileInfo(filePath);
         string value = "";
 
@@ -115,7 +117,7 @@ public class DataManager : MonoBehaviour
         }
 
         else
-            value = "파일이 없습니다.";
+            value = "기록된 점수가 없습니다.";
 
         return value;
     }
