@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GenerateMap : MonoBehaviour
 {
-    public Transform grid;         // Ä³¸¯ÅÍ¿¡ µû¶ó ¿òÁ÷ÀÏ ¸Ê
-    public Transform character;    // Ä³¸¯ÅÍ
+    public Transform grid;         // ìºë¦­í„°ì— ë”°ë¼ ì›€ì§ì¼ ë§µ
+    public Transform character;    // ìºë¦­í„°
 
     private Vector3[] pos = { new Vector3(100, 100, 0), new Vector3(-100, 100, 0),  new Vector3(-100, -100, 0), new Vector3(100, -100, 0) 
                             , new Vector3(0, 100, 0),   new Vector3(0, -100, 0),    new Vector3(-100, 0, 0),    new Vector3(100, 0, 0)};
@@ -16,38 +16,36 @@ public class GenerateMap : MonoBehaviour
         {
             float angle = Mathf.Atan2(character.position.y - transform.position.y, character.position.x - transform.position.x) * Mathf.Rad2Deg;
 
-            Debug.Log("°¢µµ´Â" + angle);
-
-            if (AngleCheck(0, angle, 43.5f, 46.5f))             // ¿À¸¥ÂÊ, À§·Î ÀÌµ¿
+            if (AngleCheck(0, angle, 43.5f, 46.5f))             // ì˜¤ë¥¸ìª½, ìœ„ë¡œ ì´ë™
             {
                 grid.position += pos[0];
             }
-            else if (AngleCheck(0, angle, 133.5f, 136.5f))      // ¿ŞÂÊ, À§·Î ÀÌµ¿
+            else if (AngleCheck(0, angle, 133.5f, 136.5f))      // ì™¼ìª½, ìœ„ë¡œ ì´ë™
             {
                 grid.position += pos[1];
             }
-            else if (AngleCheck(1, angle, -136.5f, -133.5f))    // ¿ŞÂÊ, ¾Æ·¡·Î ÀÌµ¿
+            else if (AngleCheck(1, angle, -136.5f, -133.5f))    // ì™¼ìª½, ì•„ë˜ë¡œ ì´ë™
             {
                 grid.position += pos[2];
             }
-            else if (AngleCheck(1, angle, -46.5f, -43.5f))      // ¿À¸¥ÂÊ, À§·Î ÀÌµ¿
+            else if (AngleCheck(1, angle, -46.5f, -43.5f))      // ì˜¤ë¥¸ìª½, ìœ„ë¡œ ì´ë™
             {
                 grid.position += pos[3];
             }
 
-            else if (AngleCheck(2, angle, 45, 135))             // À§·Î ÀÌµ¿
+            else if (AngleCheck(2, angle, 45, 135))             // ìœ„ë¡œ ì´ë™
             {
                 grid.position += pos[4];
             }
-            else if (AngleCheck(2, angle, -135, -45))           // ¾Æ·¡·Î ÀÌµ¿
+            else if (AngleCheck(2, angle, -135, -45))           // ì•„ë˜ë¡œ ì´ë™
             {
                 grid.position += pos[5];
             }
-            else if (AngleCheck(1, angle, 135, 180) || AngleCheck(0, angle, -180, -135)) // ¿ŞÂÊÀ¸·Î ÀÌµ¿
+            else if (AngleCheck(1, angle, 135, 180) || AngleCheck(0, angle, -180, -135)) // ì™¼ìª½ìœ¼ë¡œ ì´ë™
             {
                 grid.position += pos[6];
             }
-            else if (AngleCheck(2, angle, -45, 45))             // ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿
+            else if (AngleCheck(2, angle, -45, 45))             // ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì´ë™
             {
                 grid.position += pos[7];
             }
