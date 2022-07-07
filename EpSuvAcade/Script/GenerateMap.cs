@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class GenerateMap : MonoBehaviour
 {
-    public Transform grid;         // 캐릭터에 따라 움직일 맵
+    // 중앙 맵이 언제나 중앙에 위치하게 함
+
+    public Transform grid;         // 캐릭터에 따라 움직일 맵 묶음 (맵 크기는 100x100 9개)
     public Transform character;    // 캐릭터
 
     private Vector3[] pos = { new Vector3(100, 100, 0), new Vector3(-100, 100, 0),  new Vector3(-100, -100, 0), new Vector3(100, -100, 0) 
