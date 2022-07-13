@@ -11,9 +11,9 @@ public class Basic : Ability
 
     private void Awake()
     {
-        transform.localScale = new Vector3(20, 20, 0);
+        transform.localScale = new Vector3(30, 30, 0);
         damage = 5.0f;
-        posFix = new Vector2(2.5f, 0.6f);
+        posFix = new Vector2(3f, 0.6f);
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 

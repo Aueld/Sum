@@ -6,12 +6,18 @@ public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool Instance;
 
+    public int MonsterPoolCount = 0;
+
+    // 추가시 ObjectPool, GameManager, EnemeyController 확인
+
     // 능력
     public GameObject basicAttackPrefab;
     public GameObject bigBulletPrefab;
 
     // 적
-    public GameObject monsterPrefab; // 풀링할 오브젝트의 프리팹
+    public GameObject monster_1Prefab; // 풀링할 오브젝트의 프리팹
+    public GameObject monster_2Prefab;
+    public GameObject boss_1Prefab;
 
     // 효과
     public GameObject dmgTextPrefab;
@@ -27,18 +33,21 @@ public class ObjectPool : MonoBehaviour
     List<GameObject> Pool;
 
     // 능력
-    public List<GameObject> basicAttackPool { get; private set; }
-    public List<GameObject> bigBulletPool { get; private set; }
+    public List<GameObject> BasicAttackPool { get; private set; }
+    public List<GameObject> BigBulletPool { get; private set; }
 
     // 적
-    public List<GameObject> monster { get; private set; } 
+    public List<GameObject> Monster_1 { get; private set; }
+    public List<GameObject> Monster_2 { get; private set; }
+    
+    public List<GameObject> Boss_1 { get; private set; }
 
     // 효과
-    public List<GameObject> dmgTextPool { get; private set; }
+    public List<GameObject> DmgTextPool { get; private set; }
 
     // 아이템
-    public List<GameObject> redSoulPool { get; private set; }
-    public List<GameObject> blueSoulPool { get; private set; }
+    public List<GameObject> RedSoulPool { get; private set; }
+    public List<GameObject> BlueSoulPool { get; private set; }
 
 
     private void Awake()
@@ -47,56 +56,70 @@ public class ObjectPool : MonoBehaviour
 
         Pool = new List<GameObject>();
 
-        basicAttackPool = new List<GameObject>();
-        bigBulletPool = new List<GameObject>();
+        BasicAttackPool = new List<GameObject>();
+        BigBulletPool = new List<GameObject>();
 
-        monster = new List<GameObject>();
+        Monster_1 = new List<GameObject>();
+        Monster_2 = new List<GameObject>();
+        Boss_1 = new List<GameObject>();
 
-        redSoulPool = new List<GameObject>();
-        blueSoulPool = new List<GameObject>();
+        RedSoulPool = new List<GameObject>();
+        BlueSoulPool = new List<GameObject>();
 
-        dmgTextPool = new List<GameObject>();
+        DmgTextPool = new List<GameObject>();
 
 
         for (var i = 0; i < 3; i++)
         {
             var obj = Instantiate(basicAttackPrefab, transform);
             obj.SetActive(false);
-            basicAttackPool.Add(obj);
+            BasicAttackPool.Add(obj);
         }
         for (var i = 0; i < 3; i++)
         {
             var obj = Instantiate(bigBulletPrefab, transform);
             obj.SetActive(false);
-            bigBulletPool.Add(obj);
+            BigBulletPool.Add(obj);
         }
 
 
-        for (var i = 0; i < 50; i++)
+        for (var i = 0; i < 100; i++)
         {
-            var obj = Instantiate(monsterPrefab, transform);
+            var obj = Instantiate(monster_1Prefab, transform);
             obj.SetActive(false);
-            monster.Add(obj);
+            Monster_1.Add(obj);
+        }
+        for (var i = 0; i < 100; i++)
+        {
+            var obj = Instantiate(monster_2Prefab, transform);
+            obj.SetActive(false);
+            Monster_1.Add(obj);
+        }
+        for (var i = 0; i < 20; i++)
+        {
+            var obj = Instantiate(boss_1Prefab, transform);
+            obj.SetActive(false);
+            Boss_1.Add(obj);
         }
 
         for (var i = 0; i < 100; i++)
         {
             var obj = Instantiate(dmgTextPrefab, transform);
             obj.SetActive(false);
-            dmgTextPool.Add(obj);
+            DmgTextPool.Add(obj);
         }
 
         for (var i = 0; i < 100; i++)
         {
             var obj = Instantiate(redSoulPrefab, transform);
             obj.SetActive(false);
-            redSoulPool.Add(obj);
+            RedSoulPool.Add(obj);
         }
         for (var i = 0; i < 100; i++)
         {
             var obj = Instantiate(blueSoulPrefab, transform);
             obj.SetActive(false);
-            blueSoulPool.Add(obj);
+            BlueSoulPool.Add(obj);
         }
     }
 
@@ -106,31 +129,44 @@ public class ObjectPool : MonoBehaviour
         switch (name)
         {
             case "BasicAttack":
-                Pool = basicAttackPool;
+                Pool = BasicAttackPool;
                 prefab = basicAttackPrefab;
                 break;
             case "BigBullet":
-                Pool = bigBulletPool;
+                Pool = BigBulletPool;
                 prefab = bigBulletPrefab;
                 break;
 
+            //------------------------------------------------------------------
 
             case "Skeleton":
-                Pool = monster;
-                prefab = monsterPrefab;
+                Pool = Monster_1;
+                prefab = monster_1Prefab;
+                MonsterPoolCount++;
                 break;
-
+            case "Goblin":
+                Pool = Monster_2;
+                prefab = monster_2Prefab;
+                MonsterPoolCount++;
+                break;
+            case "Boss1":
+                Pool = Boss_1;
+                prefab = boss_1Prefab;
+                MonsterPoolCount++;
+                break;
+            //------------------------------------------------------------------
             case "DmgText":
-                Pool = dmgTextPool;
+                Pool = DmgTextPool;
                 prefab = dmgTextPrefab;
                 break;
 
+            //------------------------------------------------------------------
             case "RedSoul":
-                Pool = redSoulPool;
+                Pool = RedSoulPool;
                 prefab = redSoulPrefab;
                 break;
             case "BlueSoul":
-                Pool = blueSoulPool;
+                Pool = BlueSoulPool;
                 prefab = blueSoulPrefab;
                 break;
         }
@@ -141,16 +177,22 @@ public class ObjectPool : MonoBehaviour
             {
                 return obj;
             }
+        
+        //Debug.Log(MonsterPoolCount);
 
         // 비활성화된 오브젝트가 없을 경우, 풀을 확장한다.
         var newObj = Instantiate(prefab, transform);
         Pool.Add(newObj);
-        //poolCount++;
         return newObj;
     }
 
     public void ReturnObject(GameObject obj)
     {
+        if (obj.layer == 6)
+        {
+            MonsterPoolCount--;
+        }
+
         obj.SetActive(false);
     }
 

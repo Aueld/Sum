@@ -20,6 +20,9 @@ public class Controller : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public Vector2 vecJoystickValue { get; private set; }
     public Vector3 vecJoyRotValue { get; private set; }
 
+    public float Horizontal { get { return vecJoystickValue.x; } }
+    public float Vertical { get { return vecJoystickValue.y; } }
+
     private float fRadius;
 
     public enum PlayerState { Idle, Attack, Move, End }
@@ -77,6 +80,8 @@ public class Controller : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     private void JoyStickMoveEnd(PointerEventData eventData)
     {
+        vecJoystickValue = Vector3.zero;
+
         transJoyStick.position = eventData.position;
         joyStickBackGround.SetActive(false);
 
