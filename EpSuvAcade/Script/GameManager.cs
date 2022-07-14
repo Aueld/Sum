@@ -6,20 +6,27 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    // UI
     public Text lvText;
     public Text destroyEnemyCount;
+    public Text playTimeText;
+
     public Image soulBar;
     public GameObject rewardPanel;
     public GameObject startPanel;
+    
+    // 능력
     public AbilityManager abilityManager;
 
+    // 플레이어 객체
     public GameObject player;
-    public Text playTimeText;
-
+    
+    // 플레이어 레벨
     public int level = 1;
     public float experience;
     public float maxExperience;
 
+    // 처치 수, 게임 타이머
     private int destroyEnemyCnt = 0;
     private int wave = 1;
     private int gameTime = 0;
@@ -43,15 +50,15 @@ public class GameManager : MonoBehaviour
     public void GameStart()
     {
         Time.timeScale = 1;
-        startPanel.SetActive(false);
+        startPanel.SetActive(false);    // 시작 메뉴
     }
 
-    public void ReStart()
+    public void ReStart()   // 재시작
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private void PlayTime()
+    private void PlayTime() // 타이머
     {
         gameTimer += Time.deltaTime;
         if (gameTimer >= 1)
@@ -71,7 +78,7 @@ public class GameManager : MonoBehaviour
 
         int maxUnit = 5 + level;
 
-        if(gameTime > 5 * wave)  
+        if(gameTime > 5 * wave)  // 5초마다
         {
             wave++;
 
@@ -105,22 +112,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void DestroyEnemyCount()
+    public void DestroyEnemyCount() // 몬스터 처치 수
     {
         destroyEnemyCnt++;
-        if (destroyEnemyCnt % 100 == 0)
+
+        if (destroyEnemyCnt % 100 == 0) // 100마리 처치시 마다 보스 소환
             isBossSpawn = true;
+        
         destroyEnemyCount.text = destroyEnemyCnt.ToString();
     }
 
-    public Vector3 RandomPosition()
+    public Vector3 RandomPosition() // 플레이어 주변 원 방향으로 위치
     {
         float ranAngle = Random.Range(0, 360) * Mathf.Deg2Rad;
+        
         Vector3 pos = player.transform.position + new Vector3(60 * Mathf.Cos(ranAngle), 60 * Mathf.Sin(ranAngle), 0);
+
         return pos;
     }
 
-    public void LevelUp(float expAmount)
+    public void LevelUp(float expAmount)    // 경험치 관리
     {
         experience += expAmount;
         
@@ -135,7 +146,7 @@ public class GameManager : MonoBehaviour
             experience = experience - maxExperience;
             maxExperience *= 1.1f;
 
-            if (level % 10 == 0)
+            if (level % 10 == 0)        // 1레벨마다 *1.1, 10레벨마다 *1.5
                 maxExperience *= 1.5f;
 
             lvText.text = "LV : " + level.ToString();
@@ -147,7 +158,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Resume()
+    public void Resume()    // 게임 재개
     {
         Time.timeScale = 1;
         rewardPanel.SetActive(false);

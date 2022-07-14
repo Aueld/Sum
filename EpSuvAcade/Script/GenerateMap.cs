@@ -54,7 +54,7 @@ public class GenerateMap : MonoBehaviour
         }
     }
 
-    private bool AngleCheck(int c, float angle, float min, float max)
+    private bool AngleCheck(int c, float angle, float min, float max)   // 플레이어가 이동하는 방향 체크
     {
         switch (c)
         {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    public static ObjectPool Instance;
+    public static ObjectPool Instance;  // 인스턴스화
 
-    public int MonsterPoolCount = 0;
+    public int MonsterPoolCount = 0;    // 현재 스폰된 몬스터 수 파악
 
     // 추가시 ObjectPool, GameManager, EnemeyController 확인
 
@@ -15,11 +15,11 @@ public class ObjectPool : MonoBehaviour
     public GameObject bigBulletPrefab;
 
     // 적
-    public GameObject monster_1Prefab; // 풀링할 오브젝트의 프리팹
+    public GameObject monster_1Prefab;  // 풀링할 오브젝트의 프리팹
     public GameObject monster_2Prefab;
     public GameObject boss_1Prefab;
 
-    // 효과
+    // 텍스트
     public GameObject dmgTextPrefab;
 
     // 아이템
@@ -68,7 +68,7 @@ public class ObjectPool : MonoBehaviour
 
         DmgTextPool = new List<GameObject>();
 
-
+        // 능력 ---------------------------------------------------
         for (var i = 0; i < 3; i++)
         {
             var obj = Instantiate(basicAttackPrefab, transform);
@@ -83,6 +83,7 @@ public class ObjectPool : MonoBehaviour
         }
 
 
+        // 몬스터 ---------------------------------------------------
         for (var i = 0; i < 100; i++)
         {
             var obj = Instantiate(monster_1Prefab, transform);
@@ -102,6 +103,7 @@ public class ObjectPool : MonoBehaviour
             Boss_1.Add(obj);
         }
 
+        // 데미지 텍스트 ---------------------------------------------------
         for (var i = 0; i < 100; i++)
         {
             var obj = Instantiate(dmgTextPrefab, transform);
@@ -109,6 +111,7 @@ public class ObjectPool : MonoBehaviour
             DmgTextPool.Add(obj);
         }
 
+        // 아이템 ---------------------------------------------------
         for (var i = 0; i < 100; i++)
         {
             var obj = Instantiate(redSoulPrefab, transform);
@@ -186,7 +189,7 @@ public class ObjectPool : MonoBehaviour
         return newObj;
     }
 
-    public void ReturnObject(GameObject obj)
+    public void ReturnObject(GameObject obj)    // 오브젝트 풀로 돌림
     {
         if (obj.layer == 6)
         {
@@ -196,7 +199,7 @@ public class ObjectPool : MonoBehaviour
         obj.SetActive(false);
     }
 
-    public void AllReturnObject()
+    public void AllReturnObject()               // 모든 오브젝트를 풀로 돌림
     {
         int iCount = transform.childCount;
         for(int i = 0; i < iCount; i++)

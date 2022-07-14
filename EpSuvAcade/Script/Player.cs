@@ -55,34 +55,39 @@ public class Player : MonoBehaviour
     
     private void Move()
     {
-        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) // 하드웨어 조작 입력시
         // 하드웨어 조작
             movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         else
         //  터치스크린 조작
             movement = controller.vecJoystickValue;
                 
-        isMove = movement.magnitude != 0;
+        isMove = (movement.magnitude != 0);
         Vector2 dir = movement.normalized;
 
         if (isMove)
         {
-            if (movement.x > 0)
+            if (movement.x > 0)         // 우로 회전
             {
                 Character.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
             }
-            else if(movement.x < 0)
+            else if(movement.x < 0)     // 좌로 회전
             {
                 Character.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
             }
-            transform.Translate(dir * Time.deltaTime * speed);
-            anim.SetBool("isRun", true);
+
+            transform.Translate(dir * Time.deltaTime * speed);  // 방향으로 이동
+            
+            anim.SetBool("isRun", true);                        // Run 애니메이션
         }
-        else { anim.SetBool("isRun", false); }
+        else {
+            anim.SetBool("isRun", false);                       // Idle 애니메이션
+        }
     }
 
     private void Attack()
     {
+        // 기본 공격
         if (hasAbilityBasic)
         {
             basicTIme += Time.deltaTime;
@@ -99,6 +104,7 @@ public class Player : MonoBehaviour
             }
         }
 
+        // 대형 탄 발사
         if (hasAbilityBigBullet)
         {
             BigBulletTime += Time.deltaTime;
@@ -116,11 +122,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    // 레벨업
     public void LevelUp(float soulAmount)
     {
         gameManager.LevelUp(soulAmount);
     }
 
+    // 플레이어 현재 HP 표시
     public void PrintPlayerHp(float damage)
     {
         curHp -= damage;
