@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public float maxExperience;
 
     // 처치 수, 게임 타이머
+    private float timeDS = 1.2f;
     private int destroyEnemyCnt = 0;
     private int wave = 1;
     private int gameTime = 0;
@@ -38,6 +39,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Application.targetFrameRate = 60;
+
         Time.timeScale = 0;
     }
 
@@ -49,7 +52,7 @@ public class GameManager : MonoBehaviour
 
     public void GameStart()
     {
-        Time.timeScale = 1;
+        Time.timeScale = timeDS;
         startPanel.SetActive(false);    // 시작 메뉴
     }
 
@@ -70,14 +73,17 @@ public class GameManager : MonoBehaviour
     }
 
     // 적 소환 (player의 위치에서 원형으로 랜덤 소환)
-    // 5초마다 10 + level 마리씩 소환, 최대 200마리 + maxUnit
+    // 5초마다 10 + level 마리씩 소환, 최대 120마리 + maxUnit (30)
     private void Spawn()
     {
-        if (ObjectPool.Instance.MonsterPoolCount > 200)
+        if (ObjectPool.Instance.MonsterPoolCount > 120)
             return;
 
         int maxUnit = 5 + level;
 
+        if (maxUnit > 30)
+            maxUnit = 30;
+    
         if(gameTime > 5 * wave)  // 5초마다
         {
             wave++;
@@ -146,8 +152,8 @@ public class GameManager : MonoBehaviour
             experience = experience - maxExperience;
             maxExperience *= 1.1f;
 
-            if (level % 10 == 0)        // 1레벨마다 *1.1, 10레벨마다 *1.5
-                maxExperience *= 1.5f;
+            if (level % 10 == 0)        // 1레벨마다 *1.1, 10레벨마다 *1.2
+                maxExperience *= 1.2f;
 
             lvText.text = "LV : " + level.ToString();
             soulBar.fillAmount = experience / maxExperience;
@@ -160,7 +166,7 @@ public class GameManager : MonoBehaviour
 
     public void Resume()    // 게임 재개
     {
-        Time.timeScale = 1;
+        Time.timeScale = timeDS;
         rewardPanel.SetActive(false);
     }
 }

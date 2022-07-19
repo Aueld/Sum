@@ -20,9 +20,9 @@ public class EnemyController : MonoBehaviour
 
     public GameManager gm;              // 게임매니저
     public Text DestroyEnemyCount;      // 처치된 몬스터
-    public GameObject player;
-    public GameObject canvas;
-    public Image hpBar;
+    public GameObject player;           // 플레이어
+    public GameObject canvas;           // 체력바가 있는 캔버스
+    public Image hpBar;                 // 체력바
 
     private bool isHit;
 
@@ -42,7 +42,7 @@ public class EnemyController : MonoBehaviour
     
     private void Update()
     {
-        if(!isHit) // 피격시 잠시 정지
+        if (!isHit) // 피격시 잠시 정지, 멀리 날아가는것 방지
             rb.velocity = Vector2.zero;
 
         Move();
@@ -69,28 +69,42 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.tag == "ability Multi Hit")   // 멀티 다단 히트
         {
-            playerLogic = player.GetComponent<Player>();
-            float abilityDamage = collision.GetComponent<Ability>().damage + playerLogic.playerDamage;
-
-            StopCoroutine(HideHp());
-            StartCoroutine(HideHp());
-            canvas.SetActive(true);
-
-            Vector2 reactVec = new Vector2(transform.position.x - collision.transform.position.x,
-            transform.position.y - collision.transform.position.y).normalized;
-
-            BigBulletHitTime += Time.deltaTime;                 // 다단히트 딜레이
-            if (BigBulletHitTime > 0.5f)
+            try
             {
-                try
+                playerLogic = player.GetComponent<Player>();
+                float abilityDamage = collision.GetComponent<Ability>().damage + playerLogic.playerDamage;
+
+                if (gameObject.activeSelf)
                 {
-                    StartCoroutine(Hit(reactVec, abilityDamage));
-                    BigBulletHitTime = 0f;
+                    StopCoroutine(HideHp());
+                    StartCoroutine(HideHp());
                 }
-                catch
+                
+                canvas.SetActive(true);
+
+                Vector2 reactVec = new Vector2(transform.position.x - collision.transform.position.x,
+                transform.position.y - collision.transform.position.y).normalized;
+
+                BigBulletHitTime += Time.deltaTime;                 // 다단히트 딜레이
+                if (BigBulletHitTime > 0.5f)
                 {
-                    ObjectPool.Instance.ReturnObject(gameObject);
+                    try
+                    {
+                        if (gameObject.activeSelf)
+                        {
+                            StartCoroutine(Hit(reactVec, abilityDamage));
+                        }
+                        BigBulletHitTime = 0f;
+                    }
+                    catch
+                    {
+                        ObjectPool.Instance.ReturnObject(gameObject);
+                    }
                 }
+            }
+            catch
+            {
+                ObjectPool.Instance.ReturnObject(gameObject);
             }
         }
     }
@@ -99,19 +113,32 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.tag == "ability") // 능력에 피격
         {
-            playerLogic = player.GetComponent<Player>();
-            float abilityDamage = collision.GetComponent<Ability>().damage + playerLogic.playerDamage;
-
-            StopCoroutine(HideHp());
-            StartCoroutine(HideHp());
-            canvas.SetActive(true);
-
-            Vector2 reactVec = new Vector2(transform.position.x - collision.transform.position.x,
-            transform.position.y - collision.transform.position.y).normalized;
-
             try
             {
-                StartCoroutine(Hit(reactVec, abilityDamage));
+                playerLogic = player.GetComponent<Player>();
+                float abilityDamage = collision.GetComponent<Ability>().damage + playerLogic.playerDamage;
+
+                if (gameObject.activeSelf)
+                {
+                    StopCoroutine(HideHp());
+                    StartCoroutine(HideHp());
+                }
+                canvas.SetActive(true);
+
+                Vector2 reactVec = new Vector2(transform.position.x - collision.transform.position.x,
+                transform.position.y - collision.transform.position.y).normalized;
+
+                try
+                {
+                    if (gameObject.activeSelf)
+                    {
+                        StartCoroutine(Hit(reactVec, abilityDamage));
+                    }
+                }
+                catch
+                {
+                    ObjectPool.Instance.ReturnObject(gameObject);
+                }
             }
             catch
             {
@@ -124,12 +151,19 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.gameObject.tag == "character")
         {
-            playerHitTime += Time.deltaTime;
-            if (playerHitTime >= 0.2f)      // 피격 딜레이
+            try
             {
-                playerHitTime = 0.0f;
-                playerLogic = player.GetComponent<Player>();
-                playerLogic.PrintPlayerHp(enemyData.Damage);
+                playerHitTime += Time.deltaTime;
+                if (playerHitTime >= 0.2f)      // 피격 딜레이
+                {
+                    playerHitTime = 0.0f;
+                    playerLogic = player.GetComponent<Player>();
+                    playerLogic.PrintPlayerHp(enemyData.Damage);
+                }
+            }
+            catch
+            {
+
             }
         }
     }
@@ -178,7 +212,7 @@ public class EnemyController : MonoBehaviour
                 obj.SetActive(true);
             }
 
-            if (transform.gameObject.name == "Monster_Boss(Clone)")   // 보스 처치시 상위 아이템 드랍
+            if (transform.gameObject.name == "Monster_Boss(Clone)")   // 보스일때 처치시 상위 아이템 드랍
             {
                 for (int i = 0; i < 20; i++)
                 {

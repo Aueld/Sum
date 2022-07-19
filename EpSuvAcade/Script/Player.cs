@@ -55,15 +55,26 @@ public class Player : MonoBehaviour
     
     private void Move()
     {
-        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) // 하드웨어 조작 입력시
-        // 하드웨어 조작
+        Vector2 dir;
+
+        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)   // 하드웨어 조작 입력시
+        {
+            // 하드웨어 조작
             movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            dir = movement.normalized;
+        }
         else
-        //  터치스크린 조작
+        {
+            //  터치스크린 조작
             movement = controller.vecJoystickValue;
-                
+            dir = movement;//.normalized;
+
+            if (dir.magnitude < -1 || dir.magnitude > 1)
+                dir = movement.normalized;
+
+        }
+
         isMove = (movement.magnitude != 0);
-        Vector2 dir = movement.normalized;
 
         if (isMove)
         {
