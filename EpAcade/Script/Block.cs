@@ -6,6 +6,7 @@ public class Block : MonoBehaviour
 { 
     private static WaitForSeconds waitSec = new WaitForSeconds(1f);
 
+    #region Block variable
     public Rigidbody[] blockRd;     // 블록 리지드바디
     public int type;                // 선택된 블록
 
@@ -17,6 +18,7 @@ public class Block : MonoBehaviour
     private Ledge ledge;
 
     private bool result;
+    #endregion
 
     private void Start()
     {

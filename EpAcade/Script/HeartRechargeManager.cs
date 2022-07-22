@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 public class HeartRechargeManager : MonoBehaviour
 {
     #region Heart
-    /* 화면에 표시하기 위한 UI변수. NGUI가 있다면 사용가능
-    public UILabel appQuitTimeLabel = null;
-    public UILabel heartRechargeTimer = null;
-    public UILabel heartAmountLabel = null;
-    */
-    private int m_HeartAmount = 0;          //보유 하트 개수
+    // 화면에 표시하기 위한 UI변수.
+    public Text appQuitTimeLabel = null;
+    public Text heartRechargeTimer = null;
+    public Text heartAmountLabel = null;
+    
+    private int m_HeartAmount = 0;              //보유 하트 개수
     private DateTime m_AppQuitTime = new DateTime(1970, 1, 1).ToLocalTime();
-    private const int MAX_HEART = 5;        //하트 최대값
-    public int HeartRechargeInterval = 30;  // 하트 충전 간격(단위:초)
-    private Coroutine m_RechargeTimerCoroutine = null;
+    private const int MAX_HEART = 5;            //하트 최대값
+    
+    public int HeartRechargeInterval = 300;     // 하트 충전 간격(단위:초)
+    
+    private Coroutine m_RechargeTimerCoroutine = null;
     private int m_RechargeRemainTime = 0;
     #endregion
 
@@ -62,7 +65,7 @@ public class HeartRechargeManager : MonoBehaviour
         m_RechargeRemainTime = 0;
         m_AppQuitTime = new DateTime(1970, 1, 1).ToLocalTime();
         Debug.Log("heartRechargeTimer : " + m_RechargeRemainTime + "s");
-        //heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
+        heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
     }
 
     public bool LoadHeartInfo()
@@ -84,7 +87,7 @@ public class HeartRechargeManager : MonoBehaviour
             {
                 m_HeartAmount = MAX_HEART;
             }
-            //heartAmountLabel.text = m_HeartAmount.ToString();
+            heartAmountLabel.text = m_HeartAmount.ToString();
             Debug.Log("Loaded HeartAmount : " + m_HeartAmount);
             result = true;
         }
@@ -127,7 +130,7 @@ public class HeartRechargeManager : MonoBehaviour
                 m_AppQuitTime = DateTime.FromBinary(Convert.ToInt64(appQuitTime));
             }
             Debug.Log(string.Format("Loaded AppQuitTime : {0}", m_AppQuitTime.ToString()));
-            //appQuitTimeLabel.text = string.Format("AppQuitTime : {0}", m_AppQuitTime.ToString());
+            appQuitTimeLabel.text = string.Format("AppQuitTime : {0}", m_AppQuitTime.ToString());
             result = true;
         }
         catch (System.Exception e)
@@ -177,7 +180,7 @@ public class HeartRechargeManager : MonoBehaviour
         {
             m_RechargeTimerCoroutine = StartCoroutine(DoRechargeTimer(remainTime, onFinish));
         }
-        //heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
+        heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
         Debug.Log("HeartAmount : " + m_HeartAmount);
     }
 
@@ -189,7 +192,7 @@ public class HeartRechargeManager : MonoBehaviour
         }
 
         m_HeartAmount--;
-        //heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
+        heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
         if (m_RechargeTimerCoroutine == null)
         {
             m_RechargeTimerCoroutine = StartCoroutine(DoRechargeTimer(HeartRechargeInterval));
@@ -212,12 +215,12 @@ public class HeartRechargeManager : MonoBehaviour
             m_RechargeRemainTime = remainTime;
         }
         Debug.Log("heartRechargeTimer : " + m_RechargeRemainTime + "s");
-        //heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
+        heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
 
         while (m_RechargeRemainTime > 0)
         {
             Debug.Log("heartRechargeTimer : " + m_RechargeRemainTime + "s");
-            //heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
+            heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
             m_RechargeRemainTime -= 1;
             yield return new WaitForSeconds(1f);
         }
@@ -226,7 +229,7 @@ public class HeartRechargeManager : MonoBehaviour
         {
             m_HeartAmount = MAX_HEART;
             m_RechargeRemainTime = 0;
-            //heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
+            heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
             Debug.Log("HeartAmount reached max amount");
             m_RechargeTimerCoroutine = null;
         }
@@ -234,7 +237,7 @@ public class HeartRechargeManager : MonoBehaviour
         {
             m_RechargeTimerCoroutine = StartCoroutine(DoRechargeTimer(HeartRechargeInterval, onFinish));
         }
-        //heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
+        heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
         Debug.Log("HeartAmount : " + m_HeartAmount);
     }
 }

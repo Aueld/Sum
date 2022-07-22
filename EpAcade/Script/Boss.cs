@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class Boss : Unit
 {
+    #region Boss variable
+
     public Slider slider;
+    #endregion
 
     private void Start()
     {

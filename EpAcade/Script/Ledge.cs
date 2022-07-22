@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class Ledge : MonoBehaviour
 {
-    public int blockCount;      // ºí·Ï °¹¼ö
-    public float blockSize;     // ºí·Ï Å©±â
-    public int nowBlock;        // ÇöÀç ºí·Ï
+
+    #region Ledge variable
+
+    public int blockCount;      // ë¸”ë¡ ê°¯ìˆ˜
+    public float blockSize;     // ë¸”ë¡ í¬ê¸°
+    public int nowBlock;        // í˜„ì¬ ë¸”ë¡
 
     private Block[] blocks;
 
     private bool check;
+
+    #endregion
 
     private void Start()
     {
@@ -18,7 +23,7 @@ public class Ledge : MonoBehaviour
         Align();
     }
 
-    // ºí·Ï °´Ã¼ ³ª¿­
+    // ë¸”ë¡ ê°ì²´ ë‚˜ì—´
     private void Align()
     {
         blockCount = blocks.Length;
@@ -36,7 +41,7 @@ public class Ledge : MonoBehaviour
         }
     }
 
-    // ºí·Ï ÀÌµ¿
+    // ë¸”ë¡ ì´ë™
     private IEnumerator Move()
     {
         check = true;
@@ -57,10 +62,10 @@ public class Ledge : MonoBehaviour
         check = false;
     }
 
-    // ¼±ÅÃµÈ ºí·Ï
+    // ì„ íƒëœ ë¸”ë¡
     public void Select(int select)
     {
-        if (!check)  // ºí·° ÀÌµ¿ Áß ´Ù½Ã ´­¸®´Â°Í ¹æÁö
+        if (!check)  // ë¸”ëŸ­ ì´ë™ ì¤‘ ë‹¤ì‹œ ëˆŒë¦¬ëŠ”ê²ƒ ë°©ì§€
             if (blocks[nowBlock].Check(select))
             {
                 StartCoroutine(Move());

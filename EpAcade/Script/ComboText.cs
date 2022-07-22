@@ -5,10 +5,14 @@ using UnityEngine.UI;
 
 public class ComboText : MonoBehaviour
 {
+    #region Combo variable
+
     public int size = 100;
 
     private Text text;
-    
+
+    #endregion
+
     private void Start()
     {
         text = GetComponent<Text>();
@@ -17,14 +21,14 @@ public class ComboText : MonoBehaviour
     private void LateUpdate()
     {
         if (GameManager.comboSet)
-            StartCoroutine(ComboSet());
+            StartCoroutine(ComboEff());
 
 
         text.text = GameManager.combo + " Combo";
     }
 
     // 콤보시 텍스트 효과
-    private IEnumerator ComboSet()
+    private IEnumerator ComboEff()
     {
         text.fontSize = (int) (size * 1.5f);
 

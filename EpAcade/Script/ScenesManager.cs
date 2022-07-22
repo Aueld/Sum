@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class ScenesManager : DataManager
 {
+
     private GameObject canvas;
     private bool check;
 
@@ -63,14 +64,22 @@ public class ScenesManager : DataManager
 
     public  void GameRetry()
     {
-        SaveScore();
+        try
+        {
+            SaveScore();
+        }
+        catch { }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void GameOver()
     {
-        SaveScore();
+        try
+        {
+            SaveScore();
+        }
+        catch { }
 
         SceneManager.LoadScene("TitleMenu");
     }

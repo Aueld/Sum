@@ -8,18 +8,20 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
+    #region DataManager variable
+
     protected string filePath;
     protected string data;
 
     protected List<int> sortScore = new List<int>();
 
-    private string scoreData;
     private string[] splScore;
+    private string scoreData;
         
     private string scoreMax;
+    #endregion
 
-    //Test Update
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {

@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static readonly WaitForFixedUpdate wait = new WaitForFixedUpdate();
         
-    static GameManager instance;
+    private static GameManager instance;
 
     // 게임 시간
     public static float gameTime = 30f;     // 게임 한 판 시간
@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     private static Camera mainCamera;
     private static Vector3 defPos;
     private static Vector3 initialPosition;
+
     public static float ShakeAmount = 0.05f;
     public static float ShakeTime = 0.2f;
     
