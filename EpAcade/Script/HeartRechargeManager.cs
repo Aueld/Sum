@@ -8,7 +8,7 @@ public class HeartRechargeManager : MonoBehaviour
 {
     #region Heart
     //화면에 표시하기 위한 UI변수
-    public Text appQuitTimeLabel = null;
+    //public Text appQuitTimeLabel = null;
     public Text heartRechargeTimer = null;
     public Text heartAmountLabel = null;
     
@@ -16,7 +16,7 @@ public class HeartRechargeManager : MonoBehaviour
     private DateTime m_AppQuitTime = new DateTime(1970, 1, 1).ToLocalTime();
     private const int MAX_HEART = 5; //하트 최대값
     
-    public int HeartRechargeInterval = 30;// 하트 충전 간격(단위:초)
+    private int HeartRechargeInterval = 30;// 하트 충전 간격(단위:초)
     
     private Coroutine m_RechargeTimerCoroutine = null;
     private int m_RechargeRemainTime = 0;
@@ -35,7 +35,6 @@ public class HeartRechargeManager : MonoBehaviour
     //게임 초기화, 중간 이탈, 중간 복귀 시 실행되는 함수
     public void OnApplicationFocus(bool value)
     {
-        Debug.Log("OnApplicationFocus() : " + value);
         if (value)
         {
             LoadHeartInfo();
@@ -65,12 +64,12 @@ public class HeartRechargeManager : MonoBehaviour
         m_HeartAmount = 0;
         m_RechargeRemainTime = 0;
         m_AppQuitTime = new DateTime(1970, 1, 1).ToLocalTime();
-        Debug.Log("heartRechargeTimer : " + m_RechargeRemainTime + "s");
+
         heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
     }
+
     public bool LoadHeartInfo()
     {
-        Debug.Log("LoadHeartInfo");
         bool result = false;
         try
         {
@@ -88,7 +87,6 @@ public class HeartRechargeManager : MonoBehaviour
                 m_HeartAmount = MAX_HEART;
             }
             heartAmountLabel.text = m_HeartAmount.ToString();
-            Debug.Log("Loaded HeartAmount : " + m_HeartAmount);
             result = true;
         }
         catch (System.Exception e)
@@ -97,9 +95,9 @@ public class HeartRechargeManager : MonoBehaviour
         }
         return result;
     }
+
     public bool SaveHeartInfo()
     {
-        Debug.Log("SaveHeartInfo");
         bool result = false;
         try
         {
@@ -114,9 +112,9 @@ public class HeartRechargeManager : MonoBehaviour
         }
         return result;
     }
+
     public bool LoadAppQuitTime()
     {
-        Debug.Log("LoadAppQuitTime");
         bool result = false;
         try
         {
@@ -130,7 +128,7 @@ public class HeartRechargeManager : MonoBehaviour
             
             Debug.Log(string.Format("Loaded AppQuitTime : {0}", m_AppQuitTime.ToString()));
 
-            appQuitTimeLabel.text = string.Format("AppQuitTime : {0}", m_AppQuitTime.ToString());
+            //appQuitTimeLabel.text = string.Format("AppQuitTime : {0}", m_AppQuitTime.ToString());
             result = true;
         }
         catch (System.Exception e)
@@ -139,16 +137,18 @@ public class HeartRechargeManager : MonoBehaviour
         }
         return result;
     }
+
     public bool SaveAppQuitTime()
     {
-        Debug.Log("SaveAppQuitTime");
         bool result = false;
         try
         {
             var appQuitTime = DateTime.Now.ToLocalTime().ToBinary().ToString();
             PlayerPrefs.SetString("AppQuitTime", appQuitTime);
             PlayerPrefs.Save();
+
             Debug.Log("Saved AppQuitTime : " + DateTime.Now.ToLocalTime().ToString());
+            
             result = true;
         }
         catch (System.Exception e)
@@ -184,6 +184,7 @@ public class HeartRechargeManager : MonoBehaviour
 
         heartAmountLabel.text = string.Format("Hearts : {0}", m_HeartAmount.ToString());
     }
+
     public void UseHeart(Action onFinish = null)
     {
         if (m_HeartAmount <= 0)
