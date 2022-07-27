@@ -7,9 +7,9 @@ public class ObjeectPool : MonoBehaviour
     public GameObject bulletPrefab;
 
 
-    GameObject prefab;
+    private GameObject prefab;
 
-    List<GameObject> Pool;
+    private List<GameObject> Pool;
 
     public List<GameObject> BulletPool { get; private set; }
 
@@ -19,13 +19,12 @@ public class ObjeectPool : MonoBehaviour
 
         BulletPool = new List<GameObject>();
 
-        for(var i = 0; i < 100; i++)
+        for (var i = 0; i < 50; i++)
         {
             var obj = Instantiate(bulletPrefab, transform);
             obj.SetActive(false);
             BulletPool.Add(obj);
         }
-
     }
 
 
@@ -39,6 +38,12 @@ public class ObjeectPool : MonoBehaviour
                 break;
 
 
+        }
+
+        foreach (var obj in Pool)
+        {
+            if (!obj.activeSelf)
+                return obj;
         }
 
         // 비활성화된 오브젝트가 없을 경우, 풀을 확장한다.

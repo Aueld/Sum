@@ -17,10 +17,56 @@ public class Ledge : MonoBehaviour
 
     #endregion
 
+    private TouchController touchController;
+    private Touch touch;
+
     private void Start()
     {
+        touchController = GameObject.Find("Touch").GetComponent<TouchController>();
+
         blocks = GetComponentsInChildren<Block>();
         Align();
+    }
+
+    private void Update()
+    {
+        if(GameManager.isGameOver)
+            return;
+
+        if(Input.touchCount > 0)
+        {
+            if (touch.phase == TouchPhase.Ended)
+            {
+                if (!check)
+                {
+                    if (blocks[nowBlock].Check(GameManager.CheckBlock))
+                    {
+                        StartCoroutine(Move());
+                        GameManager.Success();
+                    }
+                    else
+                    {
+                        GameManager.Fail();
+                    }
+                }
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (!check)
+            {
+                if (blocks[nowBlock].Check(GameManager.CheckBlock))
+                {
+                    StartCoroutine(Move());
+                    GameManager.Success();
+                }
+                else
+                {
+                    GameManager.Fail();
+                }
+            }
+        }
     }
 
     // 블록 객체 나열
@@ -66,6 +112,8 @@ public class Ledge : MonoBehaviour
     public void Select(int select)
     {
         if (!check)  // 블럭 이동 중 다시 눌리는것 방지
+
+            //if (blocks[nowBlock].Check(touchController.ReturnDir()))
             if (blocks[nowBlock].Check(select))
             {
                 StartCoroutine(Move());

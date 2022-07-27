@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BezierShot3D : MonoBehaviour
 {
+    public ObjeectPool pool;
+
     Vector3[] point = new Vector3[4];
     Animator anim;
     bool hit = false;
@@ -21,11 +23,16 @@ public class BezierShot3D : MonoBehaviour
     {
         anim = GetComponent<Animator>();
 
-        point[0] = master.transform.position; // P0
-        point[1] = PointSetting(master.transform.position); // P1
-        point[2] = PointSetting(enemy.transform.position); // P2
-        point[3] = enemy.transform.position; // P3
-    }
+        Init();
+    }
+
+    private void OnEnable()
+    {
+        Init();
+
+
+        StartCoroutine(ReturnOBJ());
+    }
 
     void FixedUpdate()
     {
@@ -33,6 +40,18 @@ public class BezierShot3D : MonoBehaviour
         if (hit) return;
         t += Time.deltaTime * spd;
         DrawTrajectory();
+    }
+
+    private void Init()
+    {
+        t = 0;
+
+        point[0] = master.transform.position; // P0
+        point[1] = PointSetting(master.transform.position); // P1
+        point[2] = PointSetting(enemy.transform.position); // P2
+        point[3] = enemy.transform.position; // P3
+
+        transform.position = master.transform.position;
     }
 
     Vector3 PointSetting(Vector3 origin)
@@ -61,12 +80,8 @@ public class BezierShot3D : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject == enemy)
-        {
-            hit = true;
-            anim.SetTrigger("hit");
-            Destroy(gameObject, 0.35f);
-        }
+        if (collision.gameObject.layer == 6)        
+            pool.ReturnObject(gameObject);
     }
 
 
@@ -76,5 +91,13 @@ public class BezierShot3D : MonoBehaviour
         + Mathf.Pow((1 - t), 2) * 3 * t * b
         + Mathf.Pow(t, 2) * 3 * (1 - t) * c
         + Mathf.Pow(t, 3) * d;
+    }
+
+    private IEnumerator ReturnOBJ()
+    {
+        yield return new WaitForSeconds(3f);
+
+        if(gameObject.activeSelf)
+            pool.ReturnObject(gameObject);
     }
 }

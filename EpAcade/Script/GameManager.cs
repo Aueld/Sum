@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     public static bool btnNum;
     public GameObject[] Button;
 
+    public Shooter shooter;
+
     // 카메라 효과 관련
     private static Camera mainCamera;
     private static Vector3 defPos;
@@ -46,7 +48,8 @@ public class GameManager : MonoBehaviour
 
     public static float ShakeAmount = 0.05f;
     public static float ShakeTime = 0.2f;
-    
+
+    public static int CheckBlock = -1;
     
     private void OnEnable()
     {
@@ -129,6 +132,8 @@ public class GameManager : MonoBehaviour
             playTime -= 1f;
 
         playComboTime = 0;
+
+        instance.shooter.Shot();
 
         // static 호출
         //instance.StartCoroutine(instance.offCombo());

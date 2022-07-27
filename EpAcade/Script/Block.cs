@@ -20,6 +20,7 @@ public class Block : MonoBehaviour
     private bool result;
     #endregion
 
+
     private void Start()
     {
         maxBlock = GameManager.maxBlock;
