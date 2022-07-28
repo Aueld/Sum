@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 { 
-    private static WaitForSeconds waitSec = new WaitForSeconds(1f);
+    private static readonly WaitForSeconds waitSec = new WaitForSeconds(1f);
 
     #region Block variable
     public Rigidbody[] blockRd;     // 블록 리지드바디
@@ -12,25 +12,26 @@ public class Block : MonoBehaviour
 
     private int maxBlock;           // 최대 출력되는 블록
 
-    private Vector3 forceVec;
-    private Vector3 torqueVec; 
+    private Vector3 forceVec;       // 이동 시키는 힘
+    private Vector3 torqueVec;      // 회전 시키는 힘
 
-    private Ledge ledge;
+    private Ledge ledge;            // Ledge
 
-    private bool result;
+    private bool result;            // 블록 판정 결과
     #endregion
 
 
     private void Start()
     {
-        maxBlock = GameManager.maxBlock;
-        ledge = GetComponentInParent<Ledge>();
+        maxBlock = GameManager.maxBlock;        // 게임매니저에 등록된 블록수
+        ledge = GetComponentInParent<Ledge>();  // 부모 객체에서 스크립트 참조
+        
         Init();
     }
 
     private void LateUpdate()
     {
-        if (transform.position.z > 2.5f)
+        if (transform.position.z > 2.5f)        // 일정 거리 초과시 원위치
             ReRoll();
 
         //if (transform.position.z > 2f)
@@ -38,31 +39,33 @@ public class Block : MonoBehaviour
         
     }
 
-    private void ReRoll()
-    {
-        transform.Translate(0, 0, ledge.blockCount * ledge.blockSize * -1);
-        Init();
-    }
-
     // 초기화
     private void Init()
     {
-        type = Random.Range(0, maxBlock);
+        type = Random.Range(0, maxBlock);           // 블록 무작위 생성
 
-        for (int i = 0; i < blockRd.Length; i++)
+        for (int i = 0; i < blockRd.Length; i++)    
         {
             blockRd[i].gameObject.SetActive(type == i);
 
-            StartCoroutine(InitPhysics());
+            StartCoroutine(InitPhysics());          // 물리값 초기화
         }
     }
 
+    // 원위치, 초기화
+    private void ReRoll()
+    {
+        transform.Translate(0, 0, ledge.blockCount * ledge.blockSize * -1);
+        
+        Init();
+    }
+    
     // 선택한 블록이 맞는지 체크
     public bool Check(int select)
     {
         result = (type == select);
 
-        if (result)
+        if (result) // 선택한 블록이 정답일때 Kinematic false 후 물리 동작
         {
             blockRd[type].isKinematic = false;
             StartCoroutine(Hit());
@@ -122,7 +125,5 @@ public class Block : MonoBehaviour
             blockRd[type].isKinematic = true;
         }
     }
-
-
 }
  

@@ -7,7 +7,7 @@ public class ComboText : MonoBehaviour
 {
     #region Combo variable
 
-    public int size = 100;
+    public int size = 100;      // 텍스트 사이즈
 
     private Text text;
 
@@ -23,11 +23,10 @@ public class ComboText : MonoBehaviour
         if (GameManager.comboSet)
             StartCoroutine(ComboEff());
 
-
         text.text = GameManager.combo + " Combo";
     }
 
-    // 콤보시 텍스트 효과
+    // 콤보시 텍스트 효과, 텍스트 두개에 효과주어 입체감
     private IEnumerator ComboEff()
     {
         text.fontSize = (int) (size * 1.5f);

@@ -16,7 +16,7 @@ public class Shooter : MonoBehaviour
         StartCoroutine(CreateMissile());
     }
 
-    IEnumerator CreateMissile()
+    private IEnumerator CreateMissile()
     {
         int _shot = shot;
         while (_shot > 0)

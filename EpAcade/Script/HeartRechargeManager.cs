@@ -32,7 +32,7 @@ public class HeartRechargeManager : MonoBehaviour
         SetRechargeScheduler();
     }
 
-    //게임 초기화, 중간 이탈, 중간 복귀 시 실행되는 함수
+    // 게임 초기화, 중간 이탈, 중간 복귀 시 실행되는 함수
     public void OnApplicationFocus(bool value)
     {
         if (value)
@@ -44,13 +44,14 @@ public class HeartRechargeManager : MonoBehaviour
         }
     }
 
+    // 게임 이탈시 실행되는 함수
     private void OnApplicationQuit()
     {
         SaveHeartInfo();
         SaveAppQuitTime();
     }
 
-    //버튼 이벤트에 이 함수를 연동한다.
+    // 버튼 이벤트에 이 함수를 연동
     public void OnClickUseHeart()
     {
         UseHeart();
@@ -59,6 +60,7 @@ public class HeartRechargeManager : MonoBehaviour
         SaveAppQuitTime();
     }
 
+    // 초기화
     public void Init()
     {
         m_HeartAmount = 0;
@@ -68,6 +70,7 @@ public class HeartRechargeManager : MonoBehaviour
         heartRechargeTimer.text = string.Format("Timer : {0} s", m_RechargeRemainTime);
     }
 
+    // 데이터 로드
     public bool LoadHeartInfo()
     {
         bool result = false;

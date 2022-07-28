@@ -6,20 +6,21 @@ public class BezierShot3D : MonoBehaviour
 {
     public ObjeectPool pool;
 
-    Vector3[] point = new Vector3[4];
-    Animator anim;
-    bool hit = false;
-
+    private Vector3[] point = new Vector3[4];
+    
     [SerializeField][Range(0, 1)] private float t = 0;
     [SerializeField] public float spd = 5;
     [SerializeField] public float posA = 0.55f;
     [SerializeField] public float posB = 0.45f;
     [SerializeField] public float posC = 0.35f;
 
-    public GameObject master;
-    public GameObject enemy;
+    public GameObject master = null;
+    public GameObject enemy = null;
 
-    void Start()
+    Animator anim;
+    bool hit = false;
+
+    private void Start()
     {
         anim = GetComponent<Animator>();
 
@@ -31,10 +32,10 @@ public class BezierShot3D : MonoBehaviour
         Init();
 
 
-        StartCoroutine(ReturnOBJ());
+        StartCoroutine(WaitReturnOBJ(3));
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (t > 1) return;
         if (hit) return;
@@ -46,15 +47,18 @@ public class BezierShot3D : MonoBehaviour
     {
         t = 0;
 
-        point[0] = master.transform.position; // P0
-        point[1] = PointSetting(master.transform.position); // P1
-        point[2] = PointSetting(enemy.transform.position); // P2
-        point[3] = enemy.transform.position; // P3
+        if (master != null)
+        {
+            point[0] = master.transform.position; // P0
+            point[1] = PointSetting(master.transform.position); // P1
+            point[2] = PointSetting(enemy.transform.position); // P2
+            point[3] = enemy.transform.position; // P3
 
-        transform.position = master.transform.position;
+            transform.position = master.transform.position;
+        }
     }
 
-    Vector3 PointSetting(Vector3 origin)
+    private Vector3 PointSetting(Vector3 origin)
     {
         float x, y, z;
 
@@ -69,7 +73,7 @@ public class BezierShot3D : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
-    void DrawTrajectory()
+    private void DrawTrajectory()
     {
         transform.position = new Vector3(
         FourPointBezier(point[0].x, point[1].x, point[2].x, point[3].x),
@@ -78,10 +82,14 @@ public class BezierShot3D : MonoBehaviour
         );
     }
 
-    void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.layer == 6)        
+        if (collision.gameObject.layer == 6)
+        {
             pool.ReturnObject(gameObject);
+
+            GameManager.BossHit();
+        }
     }
 
 
@@ -93,9 +101,9 @@ public class BezierShot3D : MonoBehaviour
         + Mathf.Pow(t, 3) * d;
     }
 
-    private IEnumerator ReturnOBJ()
+    private IEnumerator WaitReturnOBJ(float time)
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(time);
 
         if(gameObject.activeSelf)
             pool.ReturnObject(gameObject);

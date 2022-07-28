@@ -10,39 +10,38 @@ public class DataManager : MonoBehaviour
 {
     #region DataManager variable
 
-    protected string filePath;
-    protected string data;
+    protected string filePath;                      // 파일 경로
+    protected string data;                          // 저장 데이터
 
-    protected List<int> sortScore = new List<int>();
+    protected List<int> sortScore = new List<int>();// 정렬 리스트
 
     private string[] splScore;
     private string scoreData;
-        
-    private string scoreMax;
+
+    private string scoreMax;                        // 최고기록
     #endregion
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
-            data = GameManager.score.ToString();
+    // Read Write Test Code
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.W))
+    //    {
+    //        filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
+    //        data = GameManager.score.ToString();
+    //        DataSave(filePath, data, 1);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.R))
+    //    {
+    //        filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
+    //        Debug.Log(DataRead(filePath));
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.Q))
+    //    {
+    //        ScoreRank();
+    //    }
+    //}
 
-            DataSave(filePath, data, 1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
-            Debug.Log(DataRead(filePath));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            ScoreRank();
-        }
-    }
-
+    // 점수 불러오기
     protected void ScoreRank()
     {
         filePath = Path.Combine(Application.streamingAssetsPath, "score.dat");
@@ -73,8 +72,6 @@ public class DataManager : MonoBehaviour
             
             scoreMax += i + ",";
 
-            Debug.Log(i + " ");
-
             count++;
         }
 
@@ -82,6 +79,7 @@ public class DataManager : MonoBehaviour
         DataSave(filePath, scoreMax, 0);
     }
 
+    // 데이터 쓰기
     protected void DataSave(string filePath, string message, int saveType)
     {
         DirectoryInfo directoryInfo = new DirectoryInfo(Path.GetDirectoryName(filePath));
@@ -93,6 +91,7 @@ public class DataManager : MonoBehaviour
 
         FileStream fileStream = null;
 
+        // 파일이 없다면 생성, 파일이 있다면 덮어쓰기
         if (saveType == 0)
             fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
         else
@@ -105,12 +104,14 @@ public class DataManager : MonoBehaviour
         writer.Close();
     }
 
+    // 데이터 읽기
     protected string DataRead(string filePath)
     {
 
         FileInfo fileInfo = new FileInfo(filePath);
         string value = "";
 
+        // 파일이 있다면 불러오기, 파일이 없다면 텍스트 출력
         if (fileInfo.Exists)
         {
             StreamReader reader = new StreamReader(filePath);

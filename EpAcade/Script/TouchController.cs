@@ -47,9 +47,7 @@ public class TouchController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         EndPoint = eventData.position;
 
-        Debug.Log(GetDistance(EndPoint, FirstPoint));
-        Debug.Log(GetDirection(EndPoint, FirstPoint));
-
+        GameManager.CheckBlock = GetDirection(EndPoint, FirstPoint);
     }
 
     // 두 벡터 거리 구하기
@@ -67,7 +65,7 @@ public class TouchController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     }
 
     // 두 벡터 방향 구하기
-    int GetDirection(Vector3 vec1, Vector3 vec2)
+    public int GetDirection(Vector3 vec1, Vector3 vec2)
     {
         // 0 : 좌, 1 : 우, 2 : 상, 3 : 하
         float width = vec2.x - vec1.x;

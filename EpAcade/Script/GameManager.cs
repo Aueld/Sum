@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
         
     private static GameManager instance;
 
+    #region Game
     // 게임 시간
     public static float gameTime = 30f;     // 게임 한 판 시간
     public static float playTime = 0;       // 플레이 시간
@@ -40,7 +41,9 @@ public class GameManager : MonoBehaviour
     public GameObject[] Button;
 
     public Shooter shooter;
+    #endregion
 
+    #region Camera
     // 카메라 효과 관련
     private static Camera mainCamera;
     private static Vector3 defPos;
@@ -48,9 +51,14 @@ public class GameManager : MonoBehaviour
 
     public static float ShakeAmount = 0.05f;
     public static float ShakeTime = 0.2f;
+    #endregion
 
     public static int CheckBlock = -1;
-    
+
+    public Boss boss;
+    public static bool bossDown = false;
+
+    // 활성화시
     private void OnEnable()
     {
         Application.targetFrameRate = 60;
@@ -58,8 +66,28 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
+    private void Update()
+    {
+        // 게임 시작전 또는 게임 오버시
+        if (!isGameStart || isGameOver)
+            return;
+
+        // 보스 다운
+        if (bossDown)
+        {
+            bossDown = false;
+            score += instance.boss.Level * 1000;
+        }
+
+        GameTimer();
+    }
+
+    // 초기화
     public void InitGame()
     {
+        instance = this;
+
+        boss.SetMaxHP(100);
 
         hit = 0;
         combo = 0;
@@ -70,6 +98,13 @@ public class GameManager : MonoBehaviour
 
         playComboTime = 0;
 
+        mainCamera = Camera.main;
+        defPos = mainCamera.transform.position;
+
+        isGameOver = false;
+        comboSet = false;
+
+        // 게임 시작시 사용자 입력 받을때까지 멈춤
         if (SceneManager.GetActiveScene().name != "Main")
         {
             if (isGameStart)
@@ -78,25 +113,16 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-
-
-        instance = this;
-
-        mainCamera = Camera.main;
-        defPos = mainCamera.transform.position;
-
-        isGameOver = false;
-        comboSet = false;
-
         instance.StartCoroutine(instance.ComboSt());
 
+        // 2키 모드인지 4키 모드인지 판단
         if (SceneManager.GetActiveScene().name == "Main")
         {
             StartCoroutine(TouchWait());
             
+            // 키 활성화 유무
             if (!btnNum)
             {
-
                 maxBlock = 2;
 
                 Button[0].SetActive(false);
@@ -116,7 +142,7 @@ public class GameManager : MonoBehaviour
     // 성공
     public static void Success()
     {
-        comboSet = true;
+        comboSet = true;    // 콤보 유지
 
         hit++;
         combo++;
@@ -133,6 +159,7 @@ public class GameManager : MonoBehaviour
 
         playComboTime = 0;
 
+        // 탄 발사
         instance.shooter.Shot();
 
         // static 호출
@@ -142,16 +169,26 @@ public class GameManager : MonoBehaviour
     // 실패
     public static void Fail()
     {
+        // 플레이 타임 감소
         if (playTime < gameTime)
             playTime += 1f;
 
+        // 카메라 흔들림
         ShakeTime = 0.2f;
         instance.StartCoroutine(CameraMove());
        
+        // 콤보 초기화
         comboSet = false;
         combo = 0;
     }
 
+    // 보스 피격
+    public static void BossHit()
+    {
+        instance.boss.Hit(1f);
+    }
+
+    // 콤보 유지 확인
     private IEnumerator ComboSt()
     {
         while (!isGameOver)
@@ -165,14 +202,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (!isGameStart || isGameOver)
-            return;
-
-        GameTimer();
-    }
-
+    // 게임 타이머
     private void GameTimer()
     {
         absTime += Time.deltaTime;
@@ -182,6 +212,7 @@ public class GameManager : MonoBehaviour
             GameOver();
     }
 
+    // 게임 오버
     private void GameOver()
     {
         isGameOver = true;
@@ -192,6 +223,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(UIMov());
     }
 
+    // 게임 오버시 UI 출력
     private IEnumerator UIMov()
     {
         Text text = UIGameOver.GetComponentInChildren<Text>();
@@ -211,6 +243,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // 카메라 무빙
     private static IEnumerator CameraMove()
     {
         while(true)
@@ -233,6 +266,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 터치 입력 대기
     private static IEnumerator TouchWait()
     {
         while (true)
