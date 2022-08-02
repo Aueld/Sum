@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class _TextManager : _LoadCSVTable
 {
-    
-
+    public TextMeshProUGUI title;
     public TextMeshProUGUI[] Select = new TextMeshProUGUI[3];
 
     public _ScrollerControll scrollerControll;
+
+    public string ID;
 
     private List<string> _eventList = new List<string>();
     private List<string> _textTypeList = new List<string>();
@@ -19,32 +21,37 @@ public class _TextManager : _LoadCSVTable
     private List<string> _rewordList = new List<string>();
     private List<string> _rewordTextList = new List<string>();
 
+
+    // 씬 시작시 ID 코드 입력 받아야 해당하는 이벤트가 나옴
     private void Awake()
     {
-        _eventList = GetEvent("10001", "Event");
-        _textTypeList = GetEvent("10001", "TextType");
-        _textList = GetEvent("10001", "Text");
-        _selectList = GetEvent("10001", "Select");
-        _selectList = GetEvent("10001", "Select");
-        _rewordList = GetEvent("10001", "Reword");
-        _rewordTextList = GetEvent("10001", "RewordText");
-
-        //foreach (var text in _eventList)
-        //    Debug.Log(text);
-
-        //foreach (var text in _textList)
-        //    Debug.Log(text);
-
-        //foreach (var text in _selectList)
-        //    Debug.Log(text);
-
+        _eventList = GetEvent(ID, "Event");
+        _textTypeList = GetEvent(ID, "TextType");
+        _textList = GetEvent(ID, "Text");
+        _selectList = GetEvent(ID, "Select");
+        _selectList = GetEvent(ID, "Select");
+        _rewordList = GetEvent(ID, "Reword");
+        _rewordTextList = GetEvent(ID, "RewordText");
     }
 
     private void OnEnable()
     {
+        PrintTitle(_eventList);
+
         PrintMainText(_textTypeList, _textList);
 
+
         PrintText(Select, _selectList);
+
+    }
+
+    private void PrintTitle(List<string> list)
+    {
+        foreach (var text in list)
+        {
+            if (text.Length > 0)
+                title.text = text;
+        }
     }
 
     private void PrintMainText(List<string> type, List<string> list)
@@ -53,13 +60,12 @@ public class _TextManager : _LoadCSVTable
 
         foreach (var text in list)
         {
-            if (text.Length < 1)
-                scrollerControll.AddNewObject(type[index], "\n\n");
+            scrollerControll.AddNewMainText(index, type[index], text);
 
-            scrollerControll.AddNewObject(type[index], text);
-            
             index++;
         }
+
+        scrollerControll.StartTyping(0, index);
     }
 
     private void PrintText(TextMeshProUGUI[] tmp, List<string> list)
