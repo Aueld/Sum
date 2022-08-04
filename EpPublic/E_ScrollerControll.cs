@@ -12,7 +12,7 @@ public class E_ScrollerControll : MonoBehaviour
     private static readonly WaitForSeconds typingWait = new WaitForSeconds(0.015f);
 
     #region PUBLIC VAL
-    public E_TextManager TextManager;
+    public E_TextManager textManager;
 
     // 스크롤 바
     public ScrollRect scrollRect;
@@ -31,18 +31,13 @@ public class E_ScrollerControll : MonoBehaviour
     // List
     private List<RectTransform> uiObjectsRectTransform = new List<RectTransform>();
     private List<TextMeshProUGUI> contentTMP = new List<TextMeshProUGUI>();
-    private List<TextMeshProUGUI> contentReTMP = new List<TextMeshProUGUI>();
     private List<List<char>> textChar = new List<List<char>>();
     private List<List<char>> textRewordChar = new List<List<char>>();
     private List<bool> TypingCheck = new List<bool>();
 
     private Color color = new Color(1f, 1f, 1f, 0f);        // 알파값 0
-
-    private bool createBar;                                 // 결과 바 생성 유무
+    private TextMeshProUGUI contentReTMP;                   // 결과 TMP
     private static Image bar;                               // Reword Bar Image
-    private static int reNum;                               // 결과 인덱스
-    private static float reY;                               // 결과 콘텐츠 Y 값
-
     private bool clickCheck;                                // 클릭 유무
 
     #endregion
@@ -51,12 +46,8 @@ public class E_ScrollerControll : MonoBehaviour
     // 초기화
     private void Awake()
     {
-        reY = 0;
-        reNum = 0;
-
         TextEnd = false;
         clickCheck = false;
-        createBar = false;
         onRewordTyping = false;
     }
 
@@ -66,6 +57,8 @@ public class E_ScrollerControll : MonoBehaviour
         SkipTyping();
     }
     #endregion
+
+    #region 스크롤뷰 콘텐츠 추가
 
     // 스크롤뷰에 메인 TMP 추가
     public void AddNewMainText(int index, string type, string text)
@@ -93,65 +86,39 @@ public class E_ScrollerControll : MonoBehaviour
             textChar[index].Add(contentTMP[index].text[i]);
         }
 
-        AddContent();
     }
 
     // 스크롤뷰에 구분 바, 결과 TMP 추가
-    public void AddNewResultText(int index, string text)
+    public void AddNewResultText(List<string> textList)
     {
-        if (!createBar)
-        {
-            createBar = true;
-            var newReBarRect = Instantiate(RewordBar, scrollRect.content).GetComponent<RectTransform>();
-            
-            bar = newReBarRect.GetComponentInChildren<Image>();
-            
-            uiObjectsRectTransform.Add(newReBarRect);
+        // 바 생성
+        var newReBarRect = Instantiate(RewordBar, scrollRect.content).GetComponent<RectTransform>();
+        bar = newReBarRect.GetComponentInChildren<Image>();
 
-            AddContent();
-        }
+        uiObjectsRectTransform.Add(newReBarRect);
 
+        // 결과 TMP 생성
         var newTMPRect = Instantiate(RewordText, scrollRect.content).GetComponent<RectTransform>();
 
-        contentReTMP.Add(newTMPRect.GetComponent<TextMeshProUGUI>());
+        contentReTMP = newTMPRect.GetComponent<TextMeshProUGUI>();
+        contentReTMP.color = color;
+
         uiObjectsRectTransform.Add(newTMPRect);
 
-        contentReTMP[index].color = color;
+        int index = 0;
 
-        textRewordChar.Add(new List<char>());
-        for (int i = 0; i < text.Length; i++)
+        foreach (var text in textList)
         {
-            textRewordChar[index].Add(text[i]);
+            textRewordChar.Add(new List<char>());
+            for (int i = 0; i < text.Length; i++)
+            {
+                textRewordChar[index].Add(text[i]);
+            }
+
+            index++;
         }
-
-        AddContentResult();
     }
-
-    // 콘텐츠 위치 지정
-    public void AddContent()
-    {
-        float y = 0f;
-
-        for (int i = 0; i < uiObjectsRectTransform.Count; i++)
-        {
-            uiObjectsRectTransform[i].anchoredPosition = new Vector2(0f, -y);
-            y += uiObjectsRectTransform[i].rect.height;
-        }
-
-        reNum++;
-        reY = y;
-
-        scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, y);
-    }
-
-    // 결과 위치 지정
-    public void AddContentResult()
-    {
-        for(int i = reNum; i < uiObjectsRectTransform.Count; i++ )
-            uiObjectsRectTransform[i].anchoredPosition = new Vector2(0f, -reY);
-        
-        scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, reY);
-    }
+    #endregion
 
     #region 타이핑
 
@@ -171,7 +138,8 @@ public class E_ScrollerControll : MonoBehaviour
 
         if (TypingCheck[index])
         {
-            contentTMP[index].text = "";
+            if (!clickCheck)
+                contentTMP[index].text = "";
             contentTMP[index].color = Color.white;
 
             foreach (var cha in textChar[index])
@@ -205,8 +173,6 @@ public class E_ScrollerControll : MonoBehaviour
     public void StartRewordTyping(int index)
     {
         StartCoroutine(RewordTyping(index));
-        // content height 값 변경
-        // https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kki5150&logNo=221151602571
     }
 
     // 결과 타이핑 코루틴
@@ -219,15 +185,15 @@ public class E_ScrollerControll : MonoBehaviour
         onRewordTyping = true;
         yield return typingWaitEnter;
 
-        contentReTMP[index].text = "";
-        contentReTMP[index].color = Color.white;
+        contentReTMP.text = "";
+        contentReTMP.color = Color.white;
 
         foreach (var cha in textRewordChar[index])
         {
             if (clickCheck)
                 yield break;
 
-            contentReTMP[index].text += cha;
+            contentReTMP.text += cha;
             yield return typingWait;
         }
         onRewordTyping = false;

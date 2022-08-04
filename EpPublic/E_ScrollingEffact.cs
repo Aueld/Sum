@@ -8,11 +8,11 @@ public class E_ScrollingEffact : MonoBehaviour
     private static readonly WaitForSeconds ViewTime = new WaitForSeconds(0.8f);
     private static readonly WaitForSeconds wait = new WaitForSeconds(0.04f);
 
+    public RectTransform content;
     public Image Scrollbar;
     public Image Handle;
 
     private ScrollRect scrollRect;
-
     private Color color;
     private bool mouseDown = false;
     
@@ -29,6 +29,10 @@ public class E_ScrollingEffact : MonoBehaviour
 
     private void Update()
     {
+        // 내용물이 스크롤 될 양이 아니라면, 660 후에 조정 필요
+        if (content.rect.height < 660)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             var pos = new Vector2(10f, Mathf.Sin(Time.time * 10f) * 0.1f);
@@ -48,6 +52,7 @@ public class E_ScrollingEffact : MonoBehaviour
         }
     }
 
+    // 마우스 입력시 스크롤바 잠시 생성 후 투명화
     private IEnumerator Click()
     {
         color = new Color(1, 1, 1, 1);

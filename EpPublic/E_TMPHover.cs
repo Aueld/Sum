@@ -5,10 +5,12 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class E_TMPHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class E_TMPHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private TextMeshProUGUI tmp;
-    private Toggle toggle;
+    public Toggle toggle;
+
+    private static GameObject select;
 
     private Color color;
     private Color faceColor;
@@ -21,6 +23,8 @@ public class E_TMPHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         tmp = GetComponent<TextMeshProUGUI>();
 
         color = new Color(0.55f, 0.55f, 0.55f);
+
+        select = null;
 
         faceColor = tmp.faceColor;
         outColor = tmp.outlineColor;
@@ -44,13 +48,24 @@ public class E_TMPHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        toggle.isOn = true;
+        if(select == null)
+            toggle.isOn = true;
         ((IPointerEnterHandler)toggle).OnPointerEnter(eventData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        toggle.isOn = false;
+        if(select == null)
+                toggle.isOn = false;
         ((IPointerExitHandler)toggle).OnPointerExit(eventData);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        select = EventSystem.current.currentSelectedGameObject;
+        
+        select.GetComponentInParent<Toggle>().isOn = false;
+
+        ((IPointerClickHandler)toggle).OnPointerClick(eventData);
     }
 }

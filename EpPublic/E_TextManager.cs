@@ -8,7 +8,7 @@ public class E_TextManager : E_LoadCSVTable
 {
     public TextMeshProUGUI title;
     public TextMeshProUGUI[] Select;
-    public E_ScrollerControll e_ScrollerControll;
+    public E_ScrollerControll scrollerControll;
 
     public TextMeshProUGUI reword;
     public TextMeshProUGUI Exit;
@@ -22,13 +22,15 @@ public class E_TextManager : E_LoadCSVTable
     private List<string> _textTypeList = new List<string>();
     private List<string> _textList = new List<string>();
     private List<string> _selectList = new List<string>();
-
-    public List<string> _rewordTextList = new List<string>();
-    public List<string> _rewordList = new List<string>();
+    private List<string> _rewordTextList = new List<string>();
+    private List<string> _rewordList = new List<string>();
 
     private bool PrintSelect = false;
 
     // 씬 시작시 ID 코드 입력 받아야 해당하는 이벤트가 나옴
+
+    #region Unity Function Awake, Enable, LateUpdate
+
     private void Awake()
     {
         _eventList = GetEvent(ID, "Event");
@@ -50,11 +52,13 @@ public class E_TextManager : E_LoadCSVTable
 
     private void LateUpdate()
     {
-        if (e_ScrollerControll.TextEnd && !PrintSelect)
+        if (scrollerControll.TextEnd && !PrintSelect)
             PrintText(Select, _selectList);
 
     }
+    #endregion
 
+    #region Print
     private void PrintTitle(List<string> list)
     {
         foreach (var text in list)
@@ -70,24 +74,15 @@ public class E_TextManager : E_LoadCSVTable
 
         foreach (var text in list)
         {
-            e_ScrollerControll.AddNewMainText(index, type[index], text);
+            scrollerControll.AddNewMainText(index, type[index], text);
 
             index++;
         }
 
-        index = 0;
+        scrollerControll.AddNewResultText(reList);
 
-        foreach (var text in reList)
-        {
-            if (text.Length > 0)
-                e_ScrollerControll.AddNewResultText(index, text);
-
-            index++;
-        }
-
-        e_ScrollerControll.StartTyping(0, index);
+        scrollerControll.StartTyping(0, index);
     }
-
 
     private void PrintText(TextMeshProUGUI[] tmp, List<string> list)
     {
@@ -101,4 +96,5 @@ public class E_TextManager : E_LoadCSVTable
                 tmp[index++].text = text;
         }
     }
+    #endregion
 }
