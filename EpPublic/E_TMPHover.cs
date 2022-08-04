@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class _TMPSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class E_TMPHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private TextMeshProUGUI tmp;
     private Toggle toggle;
@@ -20,7 +20,6 @@ public class _TMPSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         tmp = GetComponent<TextMeshProUGUI>();
 
-        //color = new Color(0.278f, 0.278f, 0.278f);
         color = new Color(0.55f, 0.55f, 0.55f);
 
         faceColor = tmp.faceColor;

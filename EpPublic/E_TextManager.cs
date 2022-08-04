@@ -4,12 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class _TextManager : _LoadCSVTable
+public class E_TextManager : E_LoadCSVTable
 {
     public TextMeshProUGUI title;
-    public TextMeshProUGUI[] Select = new TextMeshProUGUI[3];
+    public TextMeshProUGUI[] Select;
+    public E_ScrollerControll e_ScrollerControll;
 
-    public _ScrollerControll scrollerControll;
+    public TextMeshProUGUI reword;
+    public TextMeshProUGUI Exit;
+
+    public Image image;
+    public Sprite[] sprite;
 
     public string ID;
 
@@ -17,10 +22,11 @@ public class _TextManager : _LoadCSVTable
     private List<string> _textTypeList = new List<string>();
     private List<string> _textList = new List<string>();
     private List<string> _selectList = new List<string>();
-    private List<string> _selectCardList = new List<string>();
-    private List<string> _rewordList = new List<string>();
-    private List<string> _rewordTextList = new List<string>();
 
+    public List<string> _rewordTextList = new List<string>();
+    public List<string> _rewordList = new List<string>();
+
+    private bool PrintSelect = false;
 
     // 씬 시작시 ID 코드 입력 받아야 해당하는 이벤트가 나옴
     private void Awake()
@@ -29,19 +35,23 @@ public class _TextManager : _LoadCSVTable
         _textTypeList = GetEvent(ID, "TextType");
         _textList = GetEvent(ID, "Text");
         _selectList = GetEvent(ID, "Select");
-        _selectList = GetEvent(ID, "Select");
-        _rewordList = GetEvent(ID, "Reword");
+
         _rewordTextList = GetEvent(ID, "RewordText");
+        _rewordList = GetEvent(ID, "Reword");
     }
 
     private void OnEnable()
     {
+        image.sprite = sprite[0];
+
         PrintTitle(_eventList);
+        PrintMainText(_textTypeList, _textList, _rewordTextList);
+    }
 
-        PrintMainText(_textTypeList, _textList);
-
-
-        PrintText(Select, _selectList);
+    private void LateUpdate()
+    {
+        if (e_ScrollerControll.TextEnd && !PrintSelect)
+            PrintText(Select, _selectList);
 
     }
 
@@ -54,22 +64,35 @@ public class _TextManager : _LoadCSVTable
         }
     }
 
-    private void PrintMainText(List<string> type, List<string> list)
+    private void PrintMainText(List<string> type, List<string> list, List<string> reList)
     {
         int index = 0;
 
         foreach (var text in list)
         {
-            scrollerControll.AddNewMainText(index, type[index], text);
+            e_ScrollerControll.AddNewMainText(index, type[index], text);
 
             index++;
         }
 
-        scrollerControll.StartTyping(0, index);
+        index = 0;
+
+        foreach (var text in reList)
+        {
+            if (text.Length > 0)
+                e_ScrollerControll.AddNewResultText(index, text);
+
+            index++;
+        }
+
+        e_ScrollerControll.StartTyping(0, index);
     }
+
 
     private void PrintText(TextMeshProUGUI[] tmp, List<string> list)
     {
+        PrintSelect = true;
+
         int index = 0;
 
         foreach (var text in list)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class _ScrollingEffact : MonoBehaviour
+public class E_ScrollingEffact : MonoBehaviour
 {
     private static readonly WaitForSeconds ViewTime = new WaitForSeconds(0.8f);
     private static readonly WaitForSeconds wait = new WaitForSeconds(0.04f);
@@ -25,17 +25,13 @@ public class _ScrollingEffact : MonoBehaviour
 
         Scrollbar.color = color;
         Handle.color = color;
-
-
     }
 
     private void Update()
     {
-
-
         if (Input.GetMouseButtonDown(0))
         {
-            var pos = new Vector2(0f, Mathf.Sin(Time.time * 10f) * 0.1f);
+            var pos = new Vector2(10f, Mathf.Sin(Time.time * 10f) * 0.1f);
             scrollRect.content.localPosition = pos;
 
             mouseDown = true;
