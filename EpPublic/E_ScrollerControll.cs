@@ -13,6 +13,8 @@ public class E_ScrollerControll : MonoBehaviour
 
     #region PUBLIC VAL
     public E_TextManager textManager;
+    
+    public static E_ScrollerControll instance;
 
     // 스크롤 바
     public ScrollRect scrollRect;
@@ -69,6 +71,14 @@ public class E_ScrollerControll : MonoBehaviour
         uiObjectsRectTransform.Add(newTMPRect);
         
         TypingCheck.Add(false);
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         if (!TypingCheck[0])
             TypingCheck[0] = true;
@@ -147,6 +157,12 @@ public class E_ScrollerControll : MonoBehaviour
                 if (clickCheck)
                     yield break;
 
+                if (cha == '@')
+                {
+                    contentTMP[index].text += "<BR>";
+                    continue;
+                }
+
                 if (cha == '\n')
                     yield return typingWaitEnter;
 
@@ -193,6 +209,12 @@ public class E_ScrollerControll : MonoBehaviour
             if (clickCheck)
                 yield break;
 
+            if (cha == '@')
+            {
+                contentReTMP.text += "<BR>";
+                continue;
+            }
+
             contentReTMP.text += cha;
             yield return typingWait;
         }
@@ -200,8 +222,11 @@ public class E_ScrollerControll : MonoBehaviour
 
         yield return typingWaitEnter;
 
+        textManager.PrintReword(index);
 
-        Debug.Log("결과 나옴" + index);
+        ///
+        ///
+        ///
 
     }
 

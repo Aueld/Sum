@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 
 public class E_TMPSelect : MonoBehaviour
 {
-    public E_TextManager textManager;
     public E_ScrollerControll scrollerControll;
 
     private GameObject select;
@@ -24,9 +23,6 @@ public class E_TMPSelect : MonoBehaviour
                 oldSelect = select.gameObject;
                 select = null;
             }
-
-
-            Debug.Log("´©¸§" + choice + select);
         }
     }
 
