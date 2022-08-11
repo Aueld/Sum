@@ -2,36 +2,37 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class G_Card : MonoBehaviour
 {
-    // Value of card, 2 of clubs = 2, etc
-    public int value = 0;
+    [SerializeField]
+    private Sprite cardBackSprite;  // 카드 뒷면 이미지
 
+    private int cardValue = 0;       // 카드 값
+
+    // 카드 값 getter
     public int GetValueOfCard()
     {
-        return value;
+        return cardValue;
     }
 
-    public void SetValue(int newValue)
+    // 카드값 setter
+    public void SetValueOfCard(int newValue)
     {
-        value = newValue;
+        cardValue = newValue;
     }
 
-    public string GetSpriteName()
-    {
-        return GetComponent<SpriteRenderer>().sprite.name;
-    }
-
+    // 카드 이미지 setter
     public void SetSprite(Sprite newSprite)
     {
-        gameObject.GetComponent<SpriteRenderer>().sprite = newSprite;
+        gameObject.GetComponent<Image>().sprite = newSprite;
     }
 
+    // 카드 리셋
     public void ResetCard()
     {
-        Sprite back = GameObject.Find("Deck").GetComponent<G_Deck>().GetCardBack();
-        gameObject.GetComponent<SpriteRenderer>().sprite = back;
-        value = 0;
+        gameObject.GetComponent<Image>().sprite = cardBackSprite;
+        cardValue = 0;
     }
 }
