@@ -10,16 +10,14 @@ namespace Hex
 
         private List<GameObject> tiles = new List<GameObject>();
         private HexCoord hexagon;
-        private int rad = 3;
-
-        float widthSize = 0;
-        float heightSize = 0;
+        private int rad = 8;
+        private float hexRadius = 0.05f;
 
         public float height = 1;
 
-        void Start()
+        private void Start()
         {
-            hexagon = new HexCoord(widthSize, heightSize);
+            hexagon = new HexCoord(0, 0);
 
             CreateHexTileMap(hexagon);
         }
@@ -39,34 +37,53 @@ namespace Hex
                 }
             }
 
-
             index = 1;
-            int check = 0;
+
             for (int i = 1; i <= rad; i++)
             {
-                for (int j = 0; j < 6 * i; j++)
+                for (int j = 0; j < 6; j++)
                 {
-                    if(check % 6 == 0)
-                    {
-                        check = 0;
-                    }
-                    TileMove(hex.Corner(index), i, height, tiles[index]);
+                    TileMove(hex.Corner(j + 4), i, height, tiles[index]);
                     index++;
-                    check++;
+
+                    for (int k = 1; k < i; k++)
+                    {
+                        TileMoveRing(hex.Corner(j), i, height, tiles[index - 1], tiles[index]);
+                        index++;
+                    }
                 }
             }
-
         }
 
         private void TileGen(int index)
         {
             tiles.Add(Instantiate(HexTile));
             tiles[index].transform.parent = gameObject.transform;
+
+            tiles[index].transform.position = new Vector3(0, height, 0);
         }
 
         private void TileMove(Vector2 vec, int r, float y , GameObject pos)
         {
-            pos.transform.position = new Vector3(vec.x * 10 * r, y, vec.y * 10 * r);
+            float x = vec.x * Mathf.Sqrt(3) * hexRadius * r;
+            float z = vec.y * Mathf.Sqrt(3) * hexRadius * r;
+
+            pos.transform.position = new Vector3(x, y, z);
+
+        }
+
+        // 이전 타일맵의 위치를 받아와서 설치함
+        private void TileMoveRing(Vector2 vec, int r, float y, GameObject lastPos, GameObject pos)
+        {
+            float x = vec.x * Mathf.Sqrt(3) * hexRadius + lastPos.transform.position.x;
+            float z = vec.y * Mathf.Sqrt(3) * hexRadius + lastPos.transform.position.z;
+
+            pos.transform.position = new Vector3(x, y, z);
+
+            if (r == 3)
+            {
+                pos.transform.position += new Vector3(0, 1, 0);
+            }
         }
     }
 }
