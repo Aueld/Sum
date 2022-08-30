@@ -10,9 +10,9 @@ public class SelectionManager : MonoBehaviour
     private Camera mainCamera;
 
     public LayerMask selectionMask;
-    public TileGrid hexGrid;
+    public TileGrid tileGrid;
 
-    List<Vector3Int> neighbours = new List<Vector3Int>();
+    private List<Vector3Int> neighbours = new List<Vector3Int>();
 
     private void Awake()
     {
@@ -25,24 +25,30 @@ public class SelectionManager : MonoBehaviour
         GameObject result;
         if(FindTarget(mousePosition, out result))
         {
-            Tile selectHex = result.GetComponent<Tile>();
+            Tile selectTile = result.GetComponent<Tile>();
+
+            selectTile.DisableHighlight();
+
+            foreach (Vector3Int neighbour in neighbours)
+            {
+                tileGrid.GetTileAt(neighbour).DisableHighlight();
+            }
+
+            // 주변 6개 타일 
+            //neighbours = tileGrid.GetNeighboursFor(selectTile.HexCoords);
             
-            //selectHex.DisableHighlight();
-
-            //foreach (Vector3Int neighbour in neighbours)
-            //{
-            //    hexGrid.GetTileAt(neighbour).DisableHighlight();
-            //}
-
-            neighbours = hexGrid.GetNeighboursFor(selectHex.HexCoords);
-
-            //foreach (Vector3Int neighbour in neighbours)
-            //{
-            //    hexGrid.GetTileAt(neighbour).EnableHighlight();
-            //}
+            // 코스트 만큼 계산한 거리 타일
+            BFSResult bfsResult = GraphSearch.BFSGetRange(tileGrid, selectTile.HexCoords, 20);
+            neighbours = new List<Vector3Int>(bfsResult.GetRangePosition());
 
 
-            Debug.Log($"클릭 타일 : {selectHex.HexCoords} : ");
+            foreach (Vector3Int neighbour in neighbours)
+            {
+                tileGrid.GetTileAt(neighbour).EnableHighlight();
+            }
+
+
+            Debug.Log($"클릭 타일 : {selectTile.HexCoords} : ");
             foreach (Vector3Int neighbourPos in neighbours)
             {
                 Debug.Log(neighbourPos);
@@ -55,7 +61,8 @@ public class SelectionManager : MonoBehaviour
         RaycastHit hit;
         Ray ray = mainCamera.ScreenPointToRay(mousePosition);
 
-        if (Physics.Raycast(ray, out hit, selectionMask))
+        
+        if (Physics.Raycast(ray, out hit, 100, selectionMask))
         {
             result = hit.collider.gameObject;
             return true;

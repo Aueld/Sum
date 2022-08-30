@@ -30,8 +30,7 @@ namespace Hex
         {
             plain = 0,
             beach = 1,
-            forest1 = 2,
-            forest2 = 3,
+            forest = 2,
             lake = 98,
             sea = 99
         }
@@ -73,9 +72,7 @@ namespace Hex
                         if (rand > 60)
                             tileCodes.Add((int)TileName.plain);
                         else if (rand > 40)
-                            tileCodes.Add((int)TileName.forest1);
-                        else if (rand > 20)
-                            tileCodes.Add((int)TileName.forest2);
+                            tileCodes.Add((int)TileName.forest);
                         else
                             tileCodes.Add((int)TileName.lake);
                     }
@@ -169,8 +166,16 @@ namespace Hex
                     checkX += checkY;
                 }
                 floor = checkY;
-                int mX = (i - 6 * (floor - 1)) / floor;
-                int mY = (i - 6 * (floor - 1)) % floor;
+                
+                int xX = 0;
+
+                for (int j = 0; j < floor; j++)
+                {
+                    xX += j;
+                }
+                int mX = (i - 6 * xX) / floor;
+                int mY = (i - 6 * xX) % floor;
+
                 switch (mX)
                 {
                     case 0:
@@ -246,12 +251,12 @@ namespace Hex
                         }
                         break;
                 }
-                TileCoordinate hex = Checktiles[i].GetComponent<TileCoordinate>();
-                hex.index = i;
-                hex.floor = floor;
-                hex.offsetCoordiantes.x = resultX;
-                hex.offsetCoordiantes.y = 0;
-                hex.offsetCoordiantes.z = resultY;
+                Tile tile = Checktiles[i].GetComponent<Tile>();
+                tile.index = i;
+                tile.floor = floor;
+                tile.offsetCoordiantes.x = resultX;
+                tile.offsetCoordiantes.y = 0;
+                tile.offsetCoordiantes.z = resultY;
             }
         }
 

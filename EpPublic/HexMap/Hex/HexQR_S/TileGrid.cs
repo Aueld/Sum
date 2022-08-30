@@ -11,14 +11,14 @@ public class TileGrid : MonoBehaviour
     private void Start()
     {
         // 불러오기
-        Invoke(nameof(Delay), 1.5f);
+        Invoke(nameof(Delay), 1f);
     }
 
     private void Delay()
     {
-        foreach (Tile hex in FindObjectsOfType<Tile>())
+        foreach (Tile tile in FindObjectsOfType<Tile>())
         {
-            hexTileDict[hex.HexCoords] = hex;
+            hexTileDict[tile.HexCoords] = tile;
         }
     }
 
@@ -39,7 +39,7 @@ public class TileGrid : MonoBehaviour
 
         hexTileNeighboursDict.Add(hexCoordinates, new List<Vector3Int>());
 
-        foreach (Vector3Int dierection in Direction.GetDirectionList(hexCoordinates.z))
+        foreach (Vector3Int dierection in Direction.GetDirectionList(hexCoordinates.x))
         {
 
             if (hexTileDict.ContainsKey(hexCoordinates + dierection))
@@ -60,20 +60,20 @@ public static class Direction
         new Vector3Int(1, 0, 0),
         new Vector3Int(1, 0, -1),
         new Vector3Int(0, 0, -1),
-        new Vector3Int(-1, 0, -1),
-        new Vector3Int(-1, 0, 0)
+        new Vector3Int(-1, 0, 0),
+        new Vector3Int(-1, 0, 1)
     };
 
     public static List<Vector3Int> directionsOffsetEven = new List<Vector3Int>
     {
         new Vector3Int(0, 0, 1),
-        new Vector3Int(1, 0, 1),
         new Vector3Int(1, 0, 0),
+        new Vector3Int(1, 0, -1),
         new Vector3Int(0, 0, -1),
         new Vector3Int(-1, 0, 0),
         new Vector3Int(-1, 0, 1)
     };
 
-    public static List<Vector3Int> GetDirectionList(int z)
-        => z % 0.75f == 0 ? directionsOffsetEven : directionsOffsetOdd;
+    public static List<Vector3Int> GetDirectionList(int x)
+        => x % 2 == 0 ? directionsOffsetEven : directionsOffsetOdd;
 }

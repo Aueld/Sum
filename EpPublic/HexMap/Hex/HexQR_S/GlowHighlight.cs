@@ -4,13 +4,7 @@ using UnityEngine;
 
 public class GlowHighlight : MonoBehaviour
 {
-
-    Dictionary<Renderer, Material[]> glowMaterialDictionary = new Dictionary<Renderer, Material[]>();
     Dictionary<Renderer, Material[]> originalMaterialDictionary = new Dictionary<Renderer, Material[]>();
-
-    Dictionary<Color, Material> cachedGlowMaterials = new Dictionary<Color, Material>();
-
-    public Material glowMaterial;
 
     private bool isGlowing = false;
 
@@ -25,21 +19,6 @@ public class GlowHighlight : MonoBehaviour
         {
             Material[] originMaterials = renderer.materials;
             originalMaterialDictionary.Add(renderer, originMaterials);
-
-            Material[] newMaterials = new Material[renderer.materials.Length];
-
-            for (int i = 0; i < originMaterials.Length; i++)
-            {
-                Material mat = null;
-                if (cachedGlowMaterials.TryGetValue(originMaterials[i].color, out mat) == false)
-                {
-                    mat = new Material(glowMaterial);
-
-                    mat.color = originMaterials[i].color;
-                }
-                newMaterials[i] = mat;
-            }
-            glowMaterialDictionary.Add(renderer, newMaterials);
         }
     }
 
@@ -49,14 +28,14 @@ public class GlowHighlight : MonoBehaviour
         {
             foreach (Renderer renderer in originalMaterialDictionary.Keys)
             {
-                renderer.materials = glowMaterialDictionary[renderer];
+                renderer.materials[0].SetFloat("_ToggleSwitch0", 1);
             }
         }
         else
         {
             foreach (Renderer renderer in originalMaterialDictionary.Keys)
             {
-                renderer.materials = originalMaterialDictionary[renderer];
+                renderer.materials[0].SetFloat("_ToggleSwitch0", 0);
             }
         }
         isGlowing = !isGlowing;
