@@ -48,11 +48,11 @@ public class SelectionManager : MonoBehaviour
             }
 
 
-            Debug.Log($"클릭 타일 : {selectTile.HexCoords} : ");
-            foreach (Vector3Int neighbourPos in neighbours)
-            {
-                Debug.Log(neighbourPos);
-            }
+            //Debug.Log($"클릭 타일 : {selectTile.HexCoords} : ");
+            //foreach (Vector3Int neighbourPos in neighbours)
+            //{
+            //    Debug.Log(neighbourPos);
+            //}
         }
     }
 
