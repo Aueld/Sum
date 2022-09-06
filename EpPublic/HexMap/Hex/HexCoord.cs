@@ -18,25 +18,25 @@ namespace Hex
 			this.r = r;
 		}
 
-		// qr ÁÂÇ¥°è »ç¿ë
+		// qr ì¢Œí‘œê³„ ì‚¬ìš©
 		public float Z
 		{
 			get { return -q - r; }
 		}
 
-		// y = 0 ÀÏ¶§ x ÁÂÇ¥
+		// y = 0 ì¼ë•Œ x ì¢Œí‘œ
 		public float O
 		{
 			get { return q + ((int)r >> 1); }
 		}
 
-		// À¯´ÏÆ¼ »ó¿¡¼­ HexÅ¸ÀÏ ÁÂÇ¥
+		// ìœ ë‹ˆí‹° ìƒì—ì„œ Hexíƒ€ì¼ ì¢Œí‘œ
 		public Vector2 Position()
 		{
 			return q * Q_XY + r * R_XY;
 		}
 
-		// (0, 0)À¸·ÎºÎÅÍÀÇ °Å¸®
+		// (0, 0)ìœ¼ë¡œë¶€í„°ì˜ ê±°ë¦¬
 		public float AxialLength()
 		{
 			if (q == 0 && r == 0) return 0;
@@ -46,7 +46,7 @@ namespace Hex
 			return (-r > q) ? -r : q;
 		}
 
-		// (0, 0)À¸·ÎºÎÅÍÀÇ À°°¢Çü ´Ü°è ¼ö
+		// (0, 0)ìœ¼ë¡œë¶€í„°ì˜ ìœ¡ê°í˜• ë‹¨ê³„ ìˆ˜
 		public float AxialSkew()
 		{
 			if (q == 0 && r == 0) return 0;
@@ -56,14 +56,14 @@ namespace Hex
 			return (-r > q) ? Math.Min(q, -q - r) : Math.Min(-r, q + r);
 		}
 
-		// (0, 0)À¸·ÎºÎÅÍÀÇ 16Áø¼ö Áß½É °¢µµ
+		// (0, 0)ìœ¼ë¡œë¶€í„°ì˜ 16ì§„ìˆ˜ ì¤‘ì‹¬ ê°ë„
 		public float PolarAngle()
 		{
 			Vector3 pos = Position();
 			return (float)Math.Atan2(pos.y, pos.x);
 		}
 
-		// (0, 0)À¸·ÎºÎÅÍÀÇ 16Áø¼ö ¹İ´ë ¹æÇâ À§Ä¡
+		// (0, 0)ìœ¼ë¡œë¶€í„°ì˜ 16ì§„ìˆ˜ ë°˜ëŒ€ ë°©í–¥ ìœ„ì¹˜
 		public float PolarIndex()
 		{
 			if (q == 0 && r == 0) return 0;
@@ -73,7 +73,7 @@ namespace Hex
 			return (-r > q) ? -4 * r + q : 6 * q + r;
 		}
 
-		// ÀÎÁ¢ À°°¢Çü ÀÌ¿ô ¿À¸¥ÂÊ ½Ã°è ¹İ´ë¹æÇâÀ¸·Î ÁøÇà
+		// ì¸ì ‘ ìœ¡ê°í˜• ì´ì›ƒ ì˜¤ë¥¸ìª½ ì‹œê³„ ë°˜ëŒ€ë°©í–¥ìœ¼ë¡œ ì§„í–‰
 		public HexCoord Neighbor(int index)
 		{
 			return NeighborVector(index) + this;
@@ -109,20 +109,20 @@ namespace Hex
 		}
 
 
-		// ÇØ´ç À°°¢ÇüÀÇ ÁÖº¯ 6°³¸¦ ¿­°Å 0Àº ¿À¸¥ÂÊ ½Ã°è ¹İ´ë¹æÇâ ¼ø
+		// í•´ë‹¹ ìœ¡ê°í˜•ì˜ ì£¼ë³€ 6ê°œë¥¼ ì—´ê±° 0ì€ ì˜¤ë¥¸ìª½ ì‹œê³„ ë°˜ëŒ€ë°©í–¥ ìˆœ
 		public IEnumerable<HexCoord> Neighbors(int first = 0)
 		{
 			foreach (HexCoord hex in NeighborVectors(first))
 				yield return hex + this;
 		}
 
-		// ¸ğ¼­¸® Á¤Á¡ Unity À§Ä¡ ¹İÈ¯, ¸ğ¼­¸® 0Àº ¿À¸¥ÂÊ »ó´Ü ÀÌÈÄ ½Ã°è ¹İ´ë¹æÇâ
+		// ëª¨ì„œë¦¬ ì •ì  Unity ìœ„ì¹˜ ë°˜í™˜, ëª¨ì„œë¦¬ 0ì€ ì˜¤ë¥¸ìª½ ìƒë‹¨ ì´í›„ ì‹œê³„ ë°˜ëŒ€ë°©í–¥
 		public Vector2 Corner(int index)
 		{
 			return CornerVector(index) + Position();
 		}
 
-		// ÇØ´ç À°°¢Çü 6°³ÀÇ ¸ğ¼­¸®¸¦ ¿­°Å, ¸ğ¼­¸® 0Àº ¿À¸¥ÂÊ »ó´Ü ÀÌÈÄ ½Ã°è ¹İ´ë¹æÇâ
+		// í•´ë‹¹ ìœ¡ê°í˜• 6ê°œì˜ ëª¨ì„œë¦¬ë¥¼ ì—´ê±°, ëª¨ì„œë¦¬ 0ì€ ì˜¤ë¥¸ìª½ ìƒë‹¨ ì´í›„ ì‹œê³„ ë°˜ëŒ€ë°©í–¥
 		public IEnumerable<Vector2> Corners(int first = 0)
 		{
 			Vector2 pos = Position();
@@ -130,27 +130,27 @@ namespace Hex
 				yield return v + pos;
 		}
 
-		// ¸ğ¼­¸® Á¤Á¡¿¡ ´ëÇÑ ±Ø°¢, (0, 0) Áß½É¿¡¼­ 16Áø¼öÀÇ ¼±ÅÃµÈ ¸ğ¼­¸®±îÁöÀÇ °¢µµ(¹İÁö¸§)
+		// ëª¨ì„œë¦¬ ì •ì ì— ëŒ€í•œ ê·¹ê°, (0, 0) ì¤‘ì‹¬ì—ì„œ 16ì§„ìˆ˜ì˜ ì„ íƒëœ ëª¨ì„œë¦¬ê¹Œì§€ì˜ ê°ë„(ë°˜ì§€ë¦„)
 		public float CornerPolarAngle(int index)
 		{
 			Vector2 pos = Corner(index);
 			return (float)Math.Atan2(pos.y, pos.x);
 		}
 		
-		// ½Ã°è¹æÇâ °æ°è ¸ğ¼­¸®¿¡ ´ëÇÑ ±Ø°¢ ¹İÈ¯, µÎ ±Ø °æ°è ¸ğ¼­¸®´Â ±Ø°¢µµ°¡ °¡Àå ³ĞÀº È£¸¦ Çü¼ºÇÏ´Â ¸ğ¼­¸®
+		// ì‹œê³„ë°©í–¥ ê²½ê³„ ëª¨ì„œë¦¬ì— ëŒ€í•œ ê·¹ê° ë°˜í™˜, ë‘ ê·¹ ê²½ê³„ ëª¨ì„œë¦¬ëŠ” ê·¹ê°ë„ê°€ ê°€ì¥ ë„“ì€ í˜¸ë¥¼ í˜•ì„±í•˜ëŠ” ëª¨ì„œë¦¬
 		public float PolarBoundingAngle(bool CCW = false)
 		{
 			return CornerPolarAngle(PolarBoundingCornerIndex(CCW));
 		}
 
-		// ½Ã°è¹æÇâ °æ°è ¸ğ¼­¸®ÀÇ X Y À§Ä¡¸¦ ¹İÈ¯, µÎ ±Ø °æ°è ¸ğ¼­¸®´Â ±Ø°¢µµ°¡ °¡Àå ³ĞÀº È£¸¦ Çü¼ºÇÏ´Â ¸ğ¼­¸®
+		// ì‹œê³„ë°©í–¥ ê²½ê³„ ëª¨ì„œë¦¬ì˜ X Y ìœ„ì¹˜ë¥¼ ë°˜í™˜, ë‘ ê·¹ ê²½ê³„ ëª¨ì„œë¦¬ëŠ” ê·¹ê°ë„ê°€ ê°€ì¥ ë„“ì€ í˜¸ë¥¼ í˜•ì„±í•˜ëŠ” ëª¨ì„œë¦¬
 		public Vector2 PolarBoundingCorner(bool CCW = false)
 		{
 			return Corner(PolarBoundingCornerIndex(CCW));
 		}
 
-		// ½Ã°è ¹æÇâ °æ°è ¸ğ¼­¸®ÀÇ ÀÎµ¦½º ¹İÈ¯, µÎ ±Ø °æ°è ¸ğ¼­¸®´Â ±Ø°¢µµ°¡ °¡Àå ³ĞÀº È£¸¦ Çü¼ºÇÏ´Â ¸ğ¼­¸®,
-		// true·Î ¼³Á¤ÇÏ¸é ½Ã°è ¹İ´ë ¹æÇâ °æ°è¸ğ¼­¸® ¹İÈ², µ¿ÀÏÇÑ ¸µ ÀÌ¿ôÀÌ °øÀ¯ÇÏ´Â ´Ù¸¥ ¸ğ¼­¸® ¹İÈ¯
+		// ì‹œê³„ ë°©í–¥ ê²½ê³„ ëª¨ì„œë¦¬ì˜ ì¸ë±ìŠ¤ ë°˜í™˜, ë‘ ê·¹ ê²½ê³„ ëª¨ì„œë¦¬ëŠ” ê·¹ê°ë„ê°€ ê°€ì¥ ë„“ì€ í˜¸ë¥¼ í˜•ì„±í•˜ëŠ” ëª¨ì„œë¦¬,
+		// trueë¡œ ì„¤ì •í•˜ë©´ ì‹œê³„ ë°˜ëŒ€ ë°©í–¥ ê²½ê³„ëª¨ì„œë¦¬ ë°˜í™©, ë™ì¼í•œ ë§ ì´ì›ƒì´ ê³µìœ í•˜ëŠ” ë‹¤ë¥¸ ëª¨ì„œë¦¬ ë°˜í™˜
 		public int PolarBoundingCornerIndex(bool CCW = false)
 		{
 			if (q == 0 && r == 0) return 0;
@@ -176,8 +176,8 @@ namespace Hex
 					(q > -2 * r) ? 4 : 3;
 		}
 
-		// 16Áø¼ö¸¦ Æ÷ÇÔÇÏ´Â ¿øÁ¡ÀÇ Àı¹İ À°ºĞÀÇ ¹İÈ¯
-		// CornerSextant´Â HalfSextant / 2. NeighborSextant´Â (HalfSextant+1) / 2
+		// 16ì§„ìˆ˜ë¥¼ í¬í•¨í•˜ëŠ” ì›ì ì˜ ì ˆë°˜ ìœ¡ë¶„ì˜ ë°˜í™˜
+		// CornerSextantëŠ” HalfSextant / 2. NeighborSextantëŠ” (HalfSextant+1) / 2
 		public int HalfSextant()
 		{
 			if (q > 0 && r >= 0 || q == 0 && r == 0)
@@ -193,7 +193,7 @@ namespace Hex
 				(q < -2 * r) ? 10 : 11;
 		}
 
-		// 16Áø¼öÀÇ ±ØÁÂÇ¥ º¤ÅÍ¿¡ °¡Àå °¡±î¿î ¸ğ¼­¸® ÀÎµ¦½º 0. 0 ¹İÈ¯
+		// 16ì§„ìˆ˜ì˜ ê·¹ì¢Œí‘œ ë²¡í„°ì— ê°€ì¥ ê°€ê¹Œìš´ ëª¨ì„œë¦¬ ì¸ë±ìŠ¤ 0. 0 ë°˜í™˜
 		public int CornerSextant()
 		{
 			if (q > 0 && r >= 0 || q == 0 && r == 0) return 0;
@@ -202,7 +202,7 @@ namespace Hex
 			return (-r > q) ? 4 : 5;
 		}
 
-		// 16Áø¼öÀÇ ±ØÁÂÇ¥ º¤ÅÍ°¡ Åë°úÇÏ´Â 0, 0ÀÇ ÀÌ¿ô ÀÎµ¦½º ¹İÈ¯
+		// 16ì§„ìˆ˜ì˜ ê·¹ì¢Œí‘œ ë²¡í„°ê°€ í†µê³¼í•˜ëŠ” 0, 0ì˜ ì´ì›ƒ ì¸ë±ìŠ¤ ë°˜í™˜
 		public int NeighborSextant()
 		{
 			if (q == 0 && r == 0) return 0;
@@ -216,9 +216,9 @@ namespace Hex
 				(q >= -2 * r) ? 0 : 5;
 		}
 
-		// À°ºĞÀÇ ÁõºĞÀ¸·Î 0, 0 ÁÖÀ§¸¦ È¸Àü
-		// È¸Àü ÈÄ ÀÌ¸¦ ³ªÅ¸³»´Â »õ·Î¿î °ª
-		// sextants´Â È¸ÀüÇÒ À°ºĞÀÇ ¼ö
+		// ìœ¡ë¶„ì˜ ì¦ë¶„ìœ¼ë¡œ 0, 0 ì£¼ìœ„ë¥¼ íšŒì „
+		// íšŒì „ í›„ ì´ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ìƒˆë¡œìš´ ê°’
+		// sextantsëŠ” íšŒì „í•  ìœ¡ë¶„ì˜ ìˆ˜
 		public HexCoord SextantRotation(int sextants)
 		{
 			if (this == origin) return this;
@@ -231,7 +231,7 @@ namespace Hex
 			return new HexCoord(-Z, -q);
 		}
 
-		// 3Â÷ ÃàÀ» °¡·ÎÁú·¯ ¹Ì·¯¸µ, 3Â÷ÃàÀº À°°¢ÇüÀÇ ´ëÇØ ´ë°¢¼±, µÎ°³ÀÇ ¹İ´ë ¸ğ¼­¸® Åë°ú
+		// 3ì°¨ ì¶•ì„ ê°€ë¡œì§ˆëŸ¬ ë¯¸ëŸ¬ë§, 3ì°¨ì¶•ì€ ìœ¡ê°í˜•ì˜ ëŒ€í•´ ëŒ€ê°ì„ , ë‘ê°œì˜ ë°˜ëŒ€ ëª¨ì„œë¦¬ í†µê³¼
 		public HexCoord Mirror(int axis = 1)
 		{
 			if (this == origin) return this;
@@ -242,7 +242,7 @@ namespace Hex
 		}
 
 
-		// º¤ÅÍ·Î Å©±â¸¦ ÀÚ¸£°í ¹İÈ¯
+		// ë²¡í„°ë¡œ í¬ê¸°ë¥¼ ìë¥´ê³  ë°˜í™˜
 		public HexCoord Scale(float factor)
 		{
 			q = (int)(q * factor);
@@ -260,7 +260,7 @@ namespace Hex
 		public Vector2 ScaleToVector(float factor)
 		{ return new Vector2(q * factor, r * factor); }
 
-		// 16Áø¼ö°¡ ÁöÁ¤µÈ »ç°¢Çü ³»¿¡ ÀÖ´ÂÁö ¿©ºÎ °áÁ¤, »ç°¢Çü ³»¿¡ ÀÖÀ¸¸é true
+		// 16ì§„ìˆ˜ê°€ ì§€ì •ëœ ì‚¬ê°í˜• ë‚´ì— ìˆëŠ”ì§€ ì—¬ë¶€ ê²°ì •, ì‚¬ê°í˜• ë‚´ì— ìˆìœ¼ë©´ true
 		public bool IsWithinRectangle(HexCoord cornerA, HexCoord cornerB)
 		{
 			if (r > cornerA.r && r > cornerB.r || r < cornerA.r && r < cornerB.r)
@@ -281,7 +281,7 @@ namespace Hex
 			return (x <= width && x >= 0);
 		}
 
-		// 16Áø¼ö°¡ Á¡°ú b¸¦ Åë°úÇÏ´Â ¹«ÇÑ¼±¿¡ ÀÖ´ÂÁö È®ÀÎ
+		// 16ì§„ìˆ˜ê°€ ì ê³¼ bë¥¼ í†µê³¼í•˜ëŠ” ë¬´í•œì„ ì— ìˆëŠ”ì§€ í™•ì¸
 		public bool IsOnCartesianLine(Vector2 a, Vector2 b)
 		{
 			Vector2 AB = b - a;
@@ -294,7 +294,7 @@ namespace Hex
 			return false;
 		}
 
-		// Á¡ a ¿Í Á¡ b »çÀÌÀÇ ¼±ºĞ¿¡ ÀÖ´ÂÁö ¿©ºÎ °áÁ¤
+		// ì  a ì™€ ì  b ì‚¬ì´ì˜ ì„ ë¶„ì— ìˆëŠ”ì§€ ì—¬ë¶€ ê²°ì •
 		public bool IsOnCartesianLineSegment(Vector2 a, Vector2 b)
 		{
 			Vector2 AB = b - a;
@@ -315,7 +315,7 @@ namespace Hex
 			return false;
 		}
 
-		// ÁÂÇ¥ String ¹İÈ¯
+		// ì¢Œí‘œ String ë°˜í™˜
 		public override string ToString()
 		{
 			return "(" + q + "," + r + ")";
@@ -331,13 +331,13 @@ namespace Hex
 		public static readonly HexCoord origin = default(HexCoord);
 
 		
-		// µÎ À°°¢Çü »çÀÌÀÇ °Å¸®
+		// ë‘ ìœ¡ê°í˜• ì‚¬ì´ì˜ ê±°ë¦¬
 		public static float Distance(HexCoord a, HexCoord b)
 		{
 			return (a - b).AxialLength();
 		}
 
-		// ÀÎµ¦½º¸¸Å­ È¸Àü ÀÎµ¦½º Á¤±ÔÈ­
+		// ì¸ë±ìŠ¤ë§Œí¼ íšŒì „ ì¸ë±ìŠ¤ ì •ê·œí™”
 		public static int NormalizeRotationIndex(int index, int cycle = 6)
 		{
 			if (index < 0 ^ cycle < 0)
@@ -346,17 +346,17 @@ namespace Hex
 				return index % cycle;
 		}
 
-		// ÁÖ¾îÁø ÁÖ±â¿¡ ´ëÇÑ µÎ È¸Àü ÀÎµ¦½ºÀÇ µ¿ÀÏ¼º °áÁ¤
+		// ì£¼ì–´ì§„ ì£¼ê¸°ì— ëŒ€í•œ ë‘ íšŒì „ ì¸ë±ìŠ¤ì˜ ë™ì¼ì„± ê²°ì •
 		public static bool IsSameRotationIndex(int a, int b, int cycle = 6)
 		{
 			return 0 == NormalizeRotationIndex(a - b, cycle);
 		}
 
-		// 16Áø¼ö¿¡¼­ ÀÌ¿ôÀ¸·ÎÀÇ º¤ÅÍ, ÀÌ¿ôÀº ¿À¸¥ÂÊ ÀÌÈÄ ½Ã°è ¹İ´ë ¹æÇâ ÁøÇà
+		// 16ì§„ìˆ˜ì—ì„œ ì´ì›ƒìœ¼ë¡œì˜ ë²¡í„°, ì´ì›ƒì€ ì˜¤ë¥¸ìª½ ì´í›„ ì‹œê³„ ë°˜ëŒ€ ë°©í–¥ ì§„í–‰
 		public static HexCoord NeighborVector(int index)
 		{ return neighbors[NormalizeRotationIndex(index, 6)]; }
 
-		// 6°³ÀÇ ÀÌ¿ô º¤ÅÍ ¿­°Å, ÀÌ¿ôÀº ¿À¸¥ÂÊ ÀÌÈÄ ½Ã°è ¹İ´ë ¹æÇâ ÁøÇà
+		// 6ê°œì˜ ì´ì›ƒ ë²¡í„° ì—´ê±°, ì´ì›ƒì€ ì˜¤ë¥¸ìª½ ì´í›„ ì‹œê³„ ë°˜ëŒ€ ë°©í–¥ ì§„í–‰
 		public static IEnumerable<HexCoord> NeighborVectors(int first = 0)
 		{
 			first = NormalizeRotationIndex(first, 6);
@@ -366,23 +366,23 @@ namespace Hex
 				yield return neighbors[i];
 		}
 
-		// ±Ø°¢ÀÌ Åë°úÇÏ´Â (0, 0)ÀÇ ÀÌ¿ô ÀÎµ¦½º
+		// ê·¹ê°ì´ í†µê³¼í•˜ëŠ” (0, 0)ì˜ ì´ì›ƒ ì¸ë±ìŠ¤
 		public static int AngleToNeighborIndex(float angle)
 		{ return Mathf.RoundToInt(angle / SEXTANT); }
 
-		// (0, 0)ÀÇ ÀÌ¿ô¿¡ ´ëÇÑ ±Ø°¢
+		// (0, 0)ì˜ ì´ì›ƒì— ëŒ€í•œ ê·¹ê°
 		public static float NeighborIndexToAngle(int index)
 		{ return index * SEXTANT; }
 
-		// 16Áø¼ö Áß½É¿¡¼­ ¸ğ¼­¸®±îÁöÀÇ À¯´ÏÆ¼ À§Ä¡ º¤ÅÍ, ¸ğ¼­¸® 0Àº ¿À¸¥ÂÊ, ÀÌÈÄ ½Ã°è ¹İ´ë ¹æÇâ ÁøÇà
-		// ÀÎµ¦½º´Â ¿øÇÏ´Â ÄÚ³ÊÀÇ ÀÎµ¦½º
+		// 16ì§„ìˆ˜ ì¤‘ì‹¬ì—ì„œ ëª¨ì„œë¦¬ê¹Œì§€ì˜ ìœ ë‹ˆí‹° ìœ„ì¹˜ ë²¡í„°, ëª¨ì„œë¦¬ 0ì€ ì˜¤ë¥¸ìª½, ì´í›„ ì‹œê³„ ë°˜ëŒ€ ë°©í–¥ ì§„í–‰
+		// ì¸ë±ìŠ¤ëŠ” ì›í•˜ëŠ” ì½”ë„ˆì˜ ì¸ë±ìŠ¤
 		public static Vector2 CornerVector(int index)
 		{
 			return corners[NormalizeRotationIndex(index, 6)];
 		}
 
-		// 6°³ÀÇ ¸ğ¼­¸® º¤ÅÍ ¿­°Å, ¸ğ¼­¸® 0Àº ¿À¸¥ÂÊ »ó´Ü, ÀÌÈÄ ½Ã°è ¹İ´ë ¹æÇâ ÁøÇà
-		// first´Â ¿­°ÅÇÒ Ã¹ ¹øÂ° ¸ğ¼­¸® º¤ÅÍ ÀÎµ¦½º
+		// 6ê°œì˜ ëª¨ì„œë¦¬ ë²¡í„° ì—´ê±°, ëª¨ì„œë¦¬ 0ì€ ì˜¤ë¥¸ìª½ ìƒë‹¨, ì´í›„ ì‹œê³„ ë°˜ëŒ€ ë°©í–¥ ì§„í–‰
+		// firstëŠ” ì—´ê±°í•  ì²« ë²ˆì§¸ ëª¨ì„œë¦¬ ë²¡í„° ì¸ë±ìŠ¤
 		public static IEnumerable<Vector2> CornerVectors(int first = 0)
 		{
 			if (first == 0)
@@ -400,27 +400,27 @@ namespace Hex
 			}
 		}
 
-		// ±Ø°¢¿¡ °¡Àå °¡±î¿î 0,0ÀÇ ¸ğ¼­¸®
+		// ê·¹ê°ì— ê°€ì¥ ê°€ê¹Œìš´ 0,0ì˜ ëª¨ì„œë¦¬
 		public static int AngleToCornerIndex(float angle)
 		{ return Mathf.FloorToInt(angle / SEXTANT); }
 
-		// 0,0ÀÇ ¸ğ¼­¸®¿¡ ´ëÇÑ ±Ø°¢.
+		// 0,0ì˜ ëª¨ì„œë¦¬ì— ëŒ€í•œ ê·¹ê°.
 		public static float CornerIndexToAngle(int index)
 		{ return (index + 0.5f) * SEXTANT; }
 
-		// ±Ø°¢ÀÌ Åë°úÇÏ´Â 0,0ÀÇ ¹İ À°ºĞÀÇ
+		// ê·¹ê°ì´ í†µê³¼í•˜ëŠ” 0,0ì˜ ë°˜ ìœ¡ë¶„ì˜
 		public static int AngleToHalfSextant(float angle)
 		{ return Mathf.RoundToInt(2 * angle / SEXTANT); }
 
-		// ¹İ À°ºĞÀÇ°¡ ½ÃÀÛµÇ´Â ±Ø°¢
+		// ë°˜ ìœ¡ë¶„ì˜ê°€ ì‹œì‘ë˜ëŠ” ê·¹ê°
 		public static float HalfSextantToAngle(int index)
 		{ return index * SEXTANT / 2; }
 
-		// À¯´ÏÆ¼¿¡¼­ÀÇ À§Ä¡ ÁÂÇ¥
+		// ìœ ë‹ˆí‹°ì—ì„œì˜ ìœ„ì¹˜ ì¢Œí‘œ
 		public static HexCoord AtPosition(Vector2 position)
 		{ return FromQRVector(VectorXYtoQR(position)); }
 
-		// À°°¢ ±ØÁÂÇ¥ ¿øÀ» À°°¢Çü °í¸®·Î ±Ù»çÈ­, ½Ã°è ¹İ´ë ¹æÇâ ÀÎµ¦½º
+		// ìœ¡ê° ê·¹ì¢Œí‘œ ì›ì„ ìœ¡ê°í˜• ê³ ë¦¬ë¡œ ê·¼ì‚¬í™”, ì‹œê³„ ë°˜ëŒ€ ë°©í–¥ ì¸ë±ìŠ¤
 		public static HexCoord AtPolar(int radius, int index)
 		{
 			if (radius == 0) return origin;
@@ -436,19 +436,19 @@ namespace Hex
 			return new HexCoord(radius, index - radius);
 		}
 
-		// ¹İÁö¸§¿¡¼­ °¢µµ¿¡ °¡Àå °¡±î¿î À°°¢Çü ±Ø ÀÎµ¦½º, ¿øÀ» À°°¢Çü °í¸®·Î ±Ù»çÈ­
+		// ë°˜ì§€ë¦„ì—ì„œ ê°ë„ì— ê°€ì¥ ê°€ê¹Œìš´ ìœ¡ê°í˜• ê·¹ ì¸ë±ìŠ¤, ì›ì„ ìœ¡ê°í˜• ê³ ë¦¬ë¡œ ê·¼ì‚¬í™”
 		public static int FindPolarIndex(int radius, float angle)
 		{
 			return (int)Math.Round(angle * radius * 3 / Mathf.PI);
 		}
 
-		// ¿ÀÇÁ¼Â ÁÂÇ¥ x = q + r / 2 
+		// ì˜¤í”„ì…‹ ì¢Œí‘œ x = q + r / 2 
 		public static HexCoord AtOffset(int x, int y)
 		{
 			return new HexCoord(x - (y >> 1), y);
 		}
 
-		// ºÎµ¿¼Ò¼öÁ¡ q r º¤ÅÍ
+		// ë¶€ë™ì†Œìˆ˜ì  q r ë²¡í„°
 		public static HexCoord FromQRVector(Vector2 QRvector)
 		{
 			float z = -QRvector.x - QRvector.y;
@@ -468,19 +468,19 @@ namespace Hex
 			return new HexCoord(ix, iy);
 		}
 
-		// x, y º¤ÅÍ -> q, r º¤ÅÍ º¯È¯
+		// x, y ë²¡í„° -> q, r ë²¡í„° ë³€í™˜
 		public static Vector2 VectorXYtoQR(Vector2 XYvector)
 		{
 			return XYvector.x * X_QR + XYvector.y * Y_QR;
 		}
 
-		// q, r º¤ÅÍ -> x, y º¤ÅÍ º¯È¯
+		// q, r ë²¡í„° -> x, y ë²¡í„° ë³€í™˜
 		public static Vector2 VectorQRtoXY(Vector2 QRvector)
 		{
 			return QRvector.x * Q_XY + QRvector.y * R_XY;
 		}
 		
-		// X Y °ø°£ Á÷»ç°¢Çü°ú Á¢ÇÏ´Â ¸ğµç ¼¿À» Æ÷ÇÔÇÏ´Â Q R °ø°£ Á÷»ç°¢ÇüÀÇ ¸ğ¼­¸® ¹İÈ¯
+		// X Y ê³µê°„ ì§ì‚¬ê°í˜•ê³¼ ì ‘í•˜ëŠ” ëª¨ë“  ì…€ì„ í¬í•¨í•˜ëŠ” Q R ê³µê°„ ì§ì‚¬ê°í˜•ì˜ ëª¨ì„œë¦¬ ë°˜í™˜
 		public static HexCoord[] CartesianRectangleBounds(Vector2 cornerA, Vector2 cornerB)
 		{
 			Vector2 min = new Vector2(Math.Min(cornerA.x, cornerB.x), Math.Min(cornerA.y, cornerB.y));
@@ -502,11 +502,7 @@ namespace Hex
 			return results;
 		}
 
-		/*
-		 * Operators
-		 */
-
-		// Cast to Vector2 in QR space. Explicit to avoid QR/XY mix-ups.
+		// QR/XY í˜¼ë™ í”¼í•˜ê¸° ìœ„í•´ QR ê³µê°„ì—ì„œ Vector2 ìºìŠ¤íŠ¸.
 		public static explicit operator Vector2(HexCoord h)
 		{ return new Vector2(h.q, h.r); }
 		// +, -, ==, !=
@@ -522,7 +518,6 @@ namespace Hex
 		public static bool operator !=(HexCoord a, HexCoord b)
 		{ return a.q != b.q || a.r != b.r; }
 
-		// Mandatory overrides: Equals(), GetHashCode()
 		public override bool Equals(object o)
 		{ return (o is HexCoord) && this == (HexCoord)o; }
 
@@ -531,21 +526,10 @@ namespace Hex
 			return (int)q & (int)0xFFFF | (int)r << 16;
 		}
 
-		/*
-		 * Constants
-		 */
-
-		/// <summary>
-		/// One sixth of a full rotation (radians).
-		/// </summary>
 		public static readonly float SEXTANT = Mathf.PI / 3;
-
-		/// <summary>
-		/// Square root of 3.
-		/// </summary>
 		public static readonly float SQRT3 = Mathf.Sqrt(3);
 
-		// The directions array. These are private to prevent overwriting elements.
+		// ë°©í–¥ ë°°ì—´
 		static readonly HexCoord[] neighbors = {
 			new HexCoord(1, 0),
 			new HexCoord(0, 1),
@@ -555,7 +539,7 @@ namespace Hex
 			new HexCoord(1, -1)
 		};
 
-		// Corner locations in XY space. Private for same reason as neighbors.
+		// XY ê³µê°„ ì½”ë„ˆ ìœ„ì¹˜
 		static readonly Vector2[] corners = {
 			new Vector2(Mathf.Sin(SEXTANT), Mathf.Cos(SEXTANT)),
 			new Vector2(0, 1),
@@ -565,8 +549,7 @@ namespace Hex
 			new Vector2(Mathf.Sin(Mathf.PI - SEXTANT), Mathf.Cos(Mathf.PI - SEXTANT))
 		};
 
-		// Vector transformations between QR and XY space.
-		// Private to keep IntelliSense tidy. Safe to make public, but sensible uses are covered above.
+		// QR ê³¼ XY ê³µê°„ ì‚¬ì´ì˜ ë²¡í„° ë³€í™˜
 		static readonly Vector2 Q_XY = new Vector2(SQRT3, 0);
 		static readonly Vector2 R_XY = new Vector2(SQRT3 / 2, 1.5f);
 		static readonly Vector2 X_QR = new Vector2(SQRT3 / 3, 0);
