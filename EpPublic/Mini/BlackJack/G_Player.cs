@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class G_Player : MonoBehaviour
 {
@@ -10,9 +11,12 @@ public class G_Player : MonoBehaviour
     [SerializeField]
     private G_Deck deckScript;
 
-    //[SerializeField]
-    //private RectTransform StartPos;
-    //private List<RectTransform> CardPos = new List<RectTransform>();
+    [SerializeField]
+    private RectTransform StartPos;
+    private List<RectTransform> CardPos = new List<RectTransform>();
+
+    [SerializeField]
+    private RectTransform rectTransform;
 
     // 손에 있는 카드 합
     public int handValue = 0;
@@ -26,16 +30,16 @@ public class G_Player : MonoBehaviour
     // 다음 카드 숫자
     public int cardIndex = 0;
 
-    //private void Start()
-    //{
-    //    //StartPos.position = new Vector2(0, 700);
+    private void Start()
+    {
+        StartPos.position = new Vector2(0, 700);
 
-    //    foreach (var card in hand)
-    //    {
-    //        CardPos.Add(card.GetComponent<RectTransform>());
-    //        //card.transform.localPosition = new Vector3(0f, 700f, 0f);
-    //    }
-    //}
+        foreach (var card in hand)
+        {
+            CardPos.Add(card.GetComponent<RectTransform>());
+            card.transform.localPosition = new Vector3(0f, 700f, 0f);
+        }
+    }
 
     // 두장 가지고 시작
     public void StartHand()
@@ -47,16 +51,12 @@ public class G_Player : MonoBehaviour
     // 카드 드로우
     public int GetCardValue()
     {
-        //Vector2 curPos = StartPos.anchoredPosition;
-        //Vector2 desPos = CardPos[cardIndex].anchoredPosition;
+        Vector2 curPos = StartPos.anchoredPosition;
+        Vector2 desPos = CardPos[cardIndex].anchoredPosition;
 
         int cardValue = deckScript.DealCard(hand[cardIndex].GetComponent<G_Card>());
         
         hand[cardIndex].GetComponent<Image>().enabled = true;
-
-
-        //iTween.ValueTo(hand[cardIndex], iTween.Hash("from", curPos, "to", desPos, "onupdate", "OnCardMove" , "time", 1.8f, "easetype", iTween.EaseType.easeOutSine));
-
 
         handValue += cardValue;
 
@@ -64,10 +64,11 @@ public class G_Player : MonoBehaviour
         return handValue;
     }
 
-    //public void OnCardMove(Vector2 tartgetPos)
-    //{
-    //    hand[cardIndex].GetComponent<RectTransform>().anchoredPosition = tartgetPos;
-    //}
+    public void OnCardMove(Vector2 tartgetPos)
+    {
+        hand[cardIndex].GetComponent<RectTransform>().anchoredPosition = tartgetPos;
+        rectTransform.DOAnchorPos(new Vector2(0f, 0f), 1f, false).SetEase(Ease.OutElastic);
+    }
 
     public G_Card GetCard()
     {
