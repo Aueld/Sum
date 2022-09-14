@@ -79,6 +79,7 @@ public class G_GameManager : MonoBehaviour
     private void HitClicked()
     {
         // 뽑을 수 있는 카드가 있는지 판단
+        // 최대 12장
         if (playerScript.cardIndex <= 12)
         {
             //playerScript.GetCard().CardMove();
