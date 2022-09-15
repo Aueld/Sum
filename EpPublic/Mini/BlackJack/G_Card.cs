@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class G_Card : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class G_Card : MonoBehaviour
     public void SetValueOfCard(int newValue)
     {
         cardValue = newValue;
+        GetComponentInChildren<TextMeshProUGUI>().text = cardValue.ToString();
     }
 
     // 카드 이미지 setter

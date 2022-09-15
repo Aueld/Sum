@@ -27,26 +27,25 @@ public class G_GameManager : MonoBehaviour
     public TextMeshProUGUI standText;
     public TextMeshProUGUI SoulText;
 
-    // 딜러 카드 위에 덮을 뒷면의 카드
-    public GameObject hideCard;
-
     // 배팅되는 영혼의 파편 수
     // 승리시 기존 보유수의 두배, 패배시 기존 보유수의 절반, 무승부시 변동 없음 (소수점일때 버림 처리)
     public int soul = 1000;
 
-    private void Start()
+    private int totalScore = 0;
+
+    private void OnEnable()
+    {
+        Invoke(nameof(InitGame), 0.1f);
+    }
+
+    // 게임 시작
+    private void InitGame()
     {
         // 버튼 리스너 부여
         // 버튼 onClick
         hitButton.onClick.AddListener(() => HitClicked());
         standButton.onClick.AddListener(() => StandClicked());
 
-        InitGame();
-    }
-
-    // 게임 시작
-    private void InitGame()
-    {
         // 게임 초기화
         playerScript.ResetHand();
         dealerScript.ResetHand();
@@ -65,25 +64,22 @@ public class G_GameManager : MonoBehaviour
         scoreText.text = "내 숫자 합 : " + playerScript.handValue.ToString();
         dealerScoreText.text = "딜러 숫자 합 : " + dealerScript.handValue.ToString();
         
-        // 딜러 카드
-        hideCard.GetComponent<Image>().enabled = true;
-        
         hitButton.gameObject.SetActive(true);
         standButton.gameObject.SetActive(true);
         
         standText.text = "카드 받지 않기";
 
         SoulText.text = playerScript.GetSoul().ToString();
+
+        StartCoroutine(CoHitDealer());
     }
 
     private void HitClicked()
     {
         // 뽑을 수 있는 카드가 있는지 판단
         // 최대 12장
-        if (playerScript.cardIndex <= 12)
+        if (playerScript.cardIndex <= 13)
         {
-            //playerScript.GetCard().CardMove();
-
             playerScript.GetCardValue();
             scoreText.text = "내 숫자 합 : " + playerScript.handValue.ToString();
             
@@ -94,35 +90,60 @@ public class G_GameManager : MonoBehaviour
 
     private void StandClicked()
     {
-        standClicks++;
-        if (standClicks > 1) RoundOver();
+       standClicks++;
+        if (standClicks > 0)
+            RoundOver();
+
         HitDealer();
         standText.text = "카드 공개";
     }
 
     private void HitDealer()
     {
-        while (dealerScript.handValue < 16 && dealerScript.cardIndex < 10)
+        while (dealerScript.handValue < 17 && dealerScript.cardIndex <= 13)
         {
             dealerScript.GetCardValue();
             dealerScoreText.text = "딜러 숫자 합 : " + dealerScript.handValue.ToString();
-            if (dealerScript.handValue > 20) RoundOver();
+            
+            if (dealerScript.handValue > 19)
+                RoundOver();
+        }
+    }
+
+    private IEnumerator CoHitDealer()
+    {
+        yield return new WaitForSeconds(1f);
+
+        while(dealerScript.handValue < 17 && dealerScript.cardIndex <= 13)
+        {
+            dealerScript.GetCardValue();
+            dealerScoreText.text = "딜러 숫자 합 : " + dealerScript.handValue.ToString();
+
+            if (dealerScript.handValue > 19)
+                RoundOver();
+
+            yield return new WaitForSeconds(1f);
         }
     }
 
     // 승패 판단
-    void RoundOver()
+    private void RoundOver()
     {
-        // 블랙잭 판단
-        bool playerBust = playerScript.handValue > 21;
-        bool dealerBust = dealerScript.handValue > 21;
-        bool player21 = playerScript.handValue == 21;
-        bool dealer21 = dealerScript.handValue == 21;
+
+        // 버스트, 블랙잭 판단
+        bool playerBust = playerScript.handValue > 20;
+        bool dealerBust = dealerScript.handValue > 20;
+        bool player21 = playerScript.handValue == 20;
+        bool dealer21 = dealerScript.handValue == 20;
 
         // 스탠드 두번 클릭 이하일때 게임 종료시
-        if (standClicks < 2 && !playerBust && !dealerBust && !player21 && !dealer21) return;
+        //  
+        if (standClicks < 1 && !playerBust && !dealerBust && !player21 && !dealer21)
+            return;
         
         bool gameOver = true;
+
+        // 최소치 버스트
 
         // 둘 다 버스트인 경우
         if (playerBust && dealerBust)
@@ -156,8 +177,7 @@ public class G_GameManager : MonoBehaviour
         {
             hitButton.gameObject.SetActive(false);
             standButton.gameObject.SetActive(false);
-            hideCard.GetComponent<Image>().enabled = false;
-            
+
             exitButton.gameObject.SetActive(true);
             mainText.gameObject.SetActive(true);
             dealerScoreText.gameObject.SetActive(true);

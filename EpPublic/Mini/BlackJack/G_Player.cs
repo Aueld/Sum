@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class G_Player : MonoBehaviour
 {
@@ -57,7 +58,6 @@ public class G_Player : MonoBehaviour
         cardIndex++;
         return handValue;
     }
-
 
     public void OnCardMove(int index)
     {

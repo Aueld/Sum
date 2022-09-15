@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using System;
 
 public class G_Deck : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class G_Deck : MonoBehaviour
     [SerializeField]
     private int cardCount = 40;                             // 게임에 활용될 카드 최대 갯수
 
-    private List<int> cardValues = new List<int>();         // 카드 값 저장 리스트
+    private List<List<int>> cardValues = new List<List<int>>();         // 카드 값 저장 리스트
     private int currentIndex = 0;                           // 덱에서 현재 카드 인덱스
 
     private void Start()
@@ -25,7 +26,15 @@ public class G_Deck : MonoBehaviour
         for (int i = 0; i < cardCount; i++)
         {
             // 테스트용 임의 랜덤값으로 덱에 카드 생성
-            cardValues.Add(Random.Range(1, 10));
+            cardValues.Add( new List<int> {
+                UnityEngine.Random.Range(-2, 10),
+                UnityEngine.Random.Range(-2, 10),
+                UnityEngine.Random.Range(-2, 10),
+                UnityEngine.Random.Range(-2, 10)
+            });
+
+            cardValues[i].Sort();
+            cardValues[i].Reverse();
         }
     }
 
@@ -34,12 +43,12 @@ public class G_Deck : MonoBehaviour
     {
         for(int i = cardCount -1; i > 0; --i)
         {
-            int j = Mathf.FloorToInt(Random.Range(0.0f, 1.0f) * cardCount - 1) + 1;
+            int j = Mathf.FloorToInt(UnityEngine.Random.Range(0.0f, 1.0f) * cardCount - 1) + 1;
             Sprite face = cardSprites[i];
             cardSprites[i] = cardSprites[j];
             cardSprites[j] = face;
 
-            int value = cardValues[i];
+            List<int> value = cardValues[i];
             cardValues[i] = cardValues[j];
             cardValues[j] = value;
         }
@@ -50,7 +59,7 @@ public class G_Deck : MonoBehaviour
     public int DealCard(G_Card cardScript)
     {
         cardScript.SetSprite(cardSprites[currentIndex]);
-        cardScript.SetValueOfCard(cardValues[currentIndex]);
+        cardScript.SetValueOfCard(cardValues[currentIndex][0]);
         currentIndex++;
         return cardScript.GetValueOfCard();
     }
