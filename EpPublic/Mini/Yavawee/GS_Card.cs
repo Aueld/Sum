@@ -2,25 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using DG.Tweening;
+using UnityEngine.EventSystems;
 
-public class GS_Card : MonoBehaviour
+public class GS_Card : MonoBehaviour, IPointerClickHandler
 {
+    public GameObject image;
+
     private TextMeshProUGUI text;
     private int code;
 
-    private void OnEnable()
+    private void Awake()
     {
+        // 숫자 가림
+        image.SetActive(true);
+
         text = GetComponentInChildren<TextMeshProUGUI>();
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
     }
 
     public void SetCardCode(int getCode)
@@ -30,4 +28,14 @@ public class GS_Card : MonoBehaviour
         text.text = code.ToString();
     }
 
+    public void HideCount()
+    {
+        image.SetActive(true);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        // 임시 가리기입니다.
+        image.SetActive(false);
+    }
 }

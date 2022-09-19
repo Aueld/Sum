@@ -6,14 +6,13 @@ public class GS_DeckPool : MonoBehaviour
 {
     private List<int> cardCord = new List<int>();
 
-
-    void Start()
+    private void Awake()
     {
         cardCord.Clear();
 
         for(int i = 0; i < 3; i++)
         {
-            cardCord.Add(Random.Range(0, 5));
+            cardCord.Add(Random.Range(0, 20));
         }
     }
 
@@ -21,5 +20,4 @@ public class GS_DeckPool : MonoBehaviour
     {
         return cardCord;
     }
-
 }
