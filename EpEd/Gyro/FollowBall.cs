@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class FollowBall : MonoBehaviour
 {
-    [SerializeField] private Transform ball;
+    [SerializeField] private Transform Board;
 
+    private Transform ball;
     private Vector3 vecXZ;
+
+    private void Start()
+    {
+        ball = Board.GetComponentInChildren<BallMove>().gameObject.transform;
+    }
 
     private void Update()
     {
-        vecXZ = new Vector3(0, 10, ball.position.z);
+        vecXZ = new Vector3(ball.position.x, 10, ball.position.z);
 
         transform.position = vecXZ;
     }

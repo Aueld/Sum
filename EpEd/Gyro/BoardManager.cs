@@ -9,7 +9,9 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private GameObject roll;
     [SerializeField] private GameObject pump;
     [SerializeField] private GameObject ball;
-    
+    [SerializeField] private GameObject wall;
+    [SerializeField] private GameObject clear;
+
     public int width;
     public int height;
     public int size;
@@ -20,7 +22,9 @@ public class BoardManager : MonoBehaviour
 
     private void Awake()
     {
-        level = GameManager.instance.selectLevel;
+        level = 1;
+
+        //level = GameManager.instance.selectLevel;
     }
 
     private void Start()
@@ -34,26 +38,27 @@ public class BoardManager : MonoBehaviour
         switch (level)
         {
             case 1:
-                height = 15;
+                height = 16;
                 width = 7;
 
                 // 상하 반전
                 board = new int[,] {
-                { 0, 1, 1, 1, 1, 1, 0 },
+                { 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 1, 7, 1, 1, 0 },
                 { 0, 1, 1, 1, 1, 1, 0 },
                 { 0, 0, 0, 1, 0, 0, 0 },
                 { 0, 0, 1, 1, 1, 0, 0 },
                 { 0, 0, 1, 4, 1, 0, 0 },
                 { 1, 1, 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 4, 1, 1, 1 },
-                { 1, 1, 1, 0, 1, 1, 1 },
-                { 1, 1, 1, 0, 1, 1, 1 },
+                { 1, 1, 1, 0, 1, 2, 1 },
+                { 1, 2, 1, 0, 1, 1, 1 },
                 { 0, 1, 1, 4, 1, 1, 0 },
                 { 0, 1, 4, 1, 4, 1, 0 },
                 { 1, 1, 1, 1, 1, 1, 1 },
                 { 1, 0, 1, 0, 1, 0, 1 },
                 { 1, 0, 1, 1, 1, 0, 1 },
-                { 1, 1, 1, 1, 1, 1, 1 }
+                { 1, 1, 1, 6, 1, 1, 1 }
             };
 
                 TileGen();
@@ -284,56 +289,6 @@ public class BoardManager : MonoBehaviour
 
                 TileGen();
                 break;
-            case 11:
-                height = 15;
-                width = 7;
-
-                // 상하 반전
-                board = new int[,] {
-                { 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 0, 0, 1, 0, 0, 0 },
-                { 0, 4, 1, 1, 1, 4, 0 },
-                { 0, 0, 1, 4, 1, 0, 0 },
-                { 1, 1, 1, 1, 1, 1, 1 },
-                { 1, 0, 1, 4, 1, 0, 1 },
-                { 1, 0, 1, 0, 1, 0, 1 },
-                { 1, 0, 1, 0, 1, 0, 1 },
-                { 0, 1, 1, 4, 1, 1, 0 },
-                { 0, 1, 4, 1, 4, 1, 0 },
-                { 1, 1, 1, 1, 1, 1, 1 },
-                { 1, 0, 1, 0, 1, 0, 1 },
-                { 1, 0, 1, 1, 1, 0, 1 },
-                { 1, 1, 1, 1, 1, 1, 1 }
-            };
-
-                TileGen();
-                break;
-            case 12:
-                height = 15;
-                width = 7;
-
-                // 상하 반전
-                board = new int[,] {
-                { 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 0, 0, 1, 0, 0, 0 },
-                { 0, 4, 1, 1, 1, 4, 0 },
-                { 0, 0, 1, 4, 1, 0, 0 },
-                { 1, 1, 1, 1, 1, 1, 1 },
-                { 1, 0, 1, 4, 1, 0, 1 },
-                { 1, 0, 1, 0, 1, 0, 1 },
-                { 1, 0, 1, 0, 1, 0, 1 },
-                { 0, 1, 1, 4, 1, 1, 0 },
-                { 0, 1, 4, 1, 4, 1, 0 },
-                { 1, 1, 1, 1, 1, 1, 1 },
-                { 1, 0, 1, 0, 1, 0, 1 },
-                { 1, 0, 1, 1, 1, 0, 1 },
-                { 1, 1, 1, 1, 1, 1, 1 }
-            };
-
-                TileGen();
-                break;
             default:
                 break;
 
@@ -354,6 +309,12 @@ public class BoardManager : MonoBehaviour
                 return roll;
             case 4:
                 return pump;
+            case 5:
+                return wall;
+            case 6:
+                return clear;
+            case 7:
+                return ball;
             default:
                 return null;
         }
@@ -368,6 +329,7 @@ public class BoardManager : MonoBehaviour
                 if (Tile(board[i, j]) != null)
                 {
                     GameObject obj = Instantiate(Tile(board[i, j]));
+                    
                     obj.transform.parent = transform;
                     obj.transform.position = new Vector3(j * size - width / 2, 0, i * size);
                 }

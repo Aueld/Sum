@@ -6,14 +6,14 @@ using UnityEngine.SceneManagement;
 public class LoadSceneManager : MonoBehaviour
 {
     private static List<GameObject> ViewOBJ = new List<GameObject>();
-    
-    static int layer = 0;
+
+    private static int layer = 0;
 
     private void Awake()
     {
         ViewOBJ.Clear();
 
-        for(int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 0; i < gameObject.transform.childCount; i++)
         {
             ViewOBJ.Add(gameObject.transform.GetChild(i).gameObject);
         }
@@ -30,39 +30,46 @@ public class LoadSceneManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (layer > 0)
-                {
-                    layer--;
-                    ViewOn();
-                }
-            } 
+                ViewBackOn();
+            }
         }
-    }
-
-
-    private void ViewOn()
-    {
-        if (!ViewOBJ[layer].activeSelf)
-            ViewOBJ[layer].SetActive(true);
-    }
-
-
-    public static void StartView()
-    {
-        ViewOBJ[layer].SetActive(false);
-
-        if(!ViewOBJ[layer + 1].activeSelf)
-            ViewOBJ[layer + 1].SetActive(true);
-
-        layer++;    
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ViewBackOn();
+            }
+        }
     }
 
     private void SetLayer()
     {
-        for(int i = 0; i < ViewOBJ.Count; i++)
+        for (int i = 0; i < ViewOBJ.Count; i++)
             ViewOBJ[i].SetActive(false);
 
         ViewOBJ[layer].SetActive(true);
+    }
+
+    public static void ViewFrontOn()
+    {
+        if (layer < ViewOBJ.Count)
+        {
+            ViewOBJ[layer].SetActive(false);
+
+            layer++;
+
+            ViewOBJ[layer].SetActive(true);
+        }
+    }
+
+    private void ViewBackOn()
+    {
+        if (layer > 0)
+        {
+            layer--;
+
+            ViewOBJ[layer].SetActive(true);
+        }
     }
 
     public void GameExit()

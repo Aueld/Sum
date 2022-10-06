@@ -23,6 +23,8 @@ namespace FSV.Scroll
         public override void UpdateContent(ItemData itemData)
         {
             message.text = itemData.Message;
+
+            button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => Loading(itemData.Message));
         }
 
@@ -41,7 +43,7 @@ namespace FSV.Scroll
         private void Loading(string scene)
         {
             GameManager.instance.loadScene = scene;
-            LoadSceneManager.StartView();
+            LoadSceneManager.ViewFrontOn();
         }
     }
 }

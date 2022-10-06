@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int selectLevel;
+    public int reLayer = 0;
     public string loadScene;
     public bool[] clearCheck;
 
@@ -36,7 +37,17 @@ public class GameManager : MonoBehaviour
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (Input.GetKey(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (SceneManager.GetActiveScene().name != "TitleScene")
+                {
+                    SceneManager.LoadScene("TitleScene");
+                }
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (SceneManager.GetActiveScene().name != "TitleScene")
                 {
