@@ -2,15 +2,16 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GS_GameManager : MonoBehaviour
 {
     public GS_DeckPool deck;
 
-    [SerializeField] private List<GameObject> cards = new List<GameObject>();
+    [SerializeField] private List<GS_Card> cards = new List<GS_Card>();
 
-    List<GS_Card> cardScripts = new List<GS_Card>();
-    List<Vector2> CardPos = new List<Vector2>();
+    private List<GS_Card> cardScripts = new List<GS_Card>();
+    private List<Vector2> CardPos = new List<Vector2>();
 
     private bool gameStartWait = true;
 
@@ -20,8 +21,12 @@ public class GS_GameManager : MonoBehaviour
         GameStart();
     }
 
+    // 초기화
     private void InitGame()
     {
+        cardScripts.Clear();
+        CardPos.Clear();
+
         for (int i = 0; i < cards.Count; i++)
         {
             cardScripts.Add(cards[i].GetComponent<GS_Card>());
@@ -33,6 +38,7 @@ public class GS_GameManager : MonoBehaviour
             cards[i].transform.localRotation = new Quaternion(0, 0, 180f, 0);
         }
     }
+
 
     private void GameStart()
     {
@@ -67,6 +73,7 @@ public class GS_GameManager : MonoBehaviour
             });
     }
 
+    // 섞는 함수
     public void Shuffle()
     {
         if (MiniGameManager.instance.isShuffle || gameStartWait)
@@ -76,12 +83,9 @@ public class GS_GameManager : MonoBehaviour
 
         for (int index = 0; index < 3; index++)
         {
-            // 임시로 가리는 함수입니다.
-            cards[index].GetComponent<GS_Card>().HideCount();
-
-            // 카드 뒷면이 필요합니다
             // 카드를 뒤집어 섞는 방식
             cards[index].GetComponent<RectTransform>().DORotate(Vector3.up * 180f, 0.2f).SetEase(Ease.OutExpo);
+            cards[index].GetCardBack().SetActive(true);
         }
         StartCoroutine(NShuffle());
     }
@@ -105,6 +109,7 @@ public class GS_GameManager : MonoBehaviour
         return list;
     }
 
+    // 카드 움직임
     private IEnumerator NShuffle()
     {
         for (int i = 0; i < Random.Range(10, 15); i++)

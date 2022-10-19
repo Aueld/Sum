@@ -6,18 +6,15 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 
-public class GS_Card : MonoBehaviour, IPointerClickHandler
+public class GS_Card : MonoBehaviour
 {
-    public GameObject image;
+    public GameObject CardBack;
 
     private TextMeshProUGUI text;
     private int code;
 
     private void Awake()
     {
-        // 숫자 가림
-        image.SetActive(true);
-
         text = GetComponentInChildren<TextMeshProUGUI>();
     }
 
@@ -28,14 +25,8 @@ public class GS_Card : MonoBehaviour, IPointerClickHandler
         text.text = code.ToString();
     }
 
-    public void HideCount()
+    public GameObject GetCardBack()
     {
-        image.SetActive(true);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        // 임시 가리기입니다.
-        image.SetActive(false);
+        return CardBack;
     }
 }
