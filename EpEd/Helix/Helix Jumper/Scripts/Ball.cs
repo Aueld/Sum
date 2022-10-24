@@ -6,7 +6,7 @@ public class Ball : MonoBehaviour {
 
 	public LayerMask ground;
 
-	private const float jumpForce = 10;
+	private const float jumpForce = 6;
 
 	private Rigidbody rb;
 
@@ -14,8 +14,6 @@ public class Ball : MonoBehaviour {
 	{
 		rb = GetComponent<Rigidbody>();
 	}
-
-	
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -27,7 +25,6 @@ public class Ball : MonoBehaviour {
 			return;
 		}
 
-
 		rb.velocity = Vector3.zero;
 		rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 	}
@@ -37,5 +34,4 @@ public class Ball : MonoBehaviour {
 		rb.velocity = Vector3.zero;
 		rb.useGravity = false;
 	}
-
 }

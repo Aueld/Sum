@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class LoadSceneManager : MonoBehaviour
 {
-    private static List<GameObject> ViewOBJ = new List<GameObject>();
-
+    private static readonly List<GameObject> ViewOBJ = new List<GameObject>();
     private static int layer = 0;
 
     private void Awake()
@@ -23,6 +23,25 @@ public class LoadSceneManager : MonoBehaviour
         SetLayer();
     }
 
+    private void Start()
+    {
+        if (GameManager.instance.gameQueue.Count > 0)
+        {
+            for (int i = 0; i < ViewOBJ.Count; i++)
+            {
+                ViewOBJ[i].SetActive(false);
+            }
+
+            GameStart();
+        }
+        else
+        {
+            for (int i = 0; i < ViewOBJ.Count; i++)
+            {
+                ViewOBJ[i].SetActive(true);
+            }
+        }
+    }
 
     private void Update()
     {
@@ -50,6 +69,11 @@ public class LoadSceneManager : MonoBehaviour
         ViewOBJ[layer].SetActive(true);
     }
 
+    public void GameStart()
+    {
+        GameManager.instance.GameStarter();
+    }
+
     public static void ViewFrontOn()
     {
         if (layer < ViewOBJ.Count)
@@ -71,7 +95,6 @@ public class LoadSceneManager : MonoBehaviour
             ViewOBJ[layer].SetActive(true);
         }
     }
-
     public void GameExit()
     {
         Application.Quit();

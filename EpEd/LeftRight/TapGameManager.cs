@@ -46,6 +46,8 @@ public class TapGameManager : MonoBehaviour
 
     public static int CheckBlock = -1;
 
+    private static bool playWait;
+
     // 활성화시
     private void OnEnable()
     {
@@ -68,8 +70,9 @@ public class TapGameManager : MonoBehaviour
         combo = 0;
         score = 0;
         playComboTime = 0;
+        playWait = true;
 
-        goalCount = 5 + GameManager.instance.selectLevel * 5;
+        goalCount = 100;
 
         mainCamera = Camera.main;
         defPos = mainCamera.transform.position;
@@ -83,6 +86,9 @@ public class TapGameManager : MonoBehaviour
     // 성공
     public static void Success()
     {
+        if(playWait)
+            playWait = false;
+
         comboSet = true;    // 콤보 유지
 
         hit++;
@@ -103,7 +109,9 @@ public class TapGameManager : MonoBehaviour
         // 카메라 흔들림
         ShakeTime = 0.2f;
         instance.StartCoroutine(CameraMove());
-       
+
+        isGameOver = true;
+
         // 콤보 초기화
         comboSet = false;
         combo = 0;
@@ -119,15 +127,22 @@ public class TapGameManager : MonoBehaviour
             playComboTime += Time.deltaTime;
 
             if (playComboTime > maxComboTime)
+            {
+                // 실패
+                if(!playWait)
+                    isGameOver = true;
                 combo = 0;
+            }
         }
     }
 
     // 게임 오버
     private void GameOver()
     {
+        GameManager.instance.State[1] = hit / 10;
 
-        Debug.Log("게임 오버");
+        if (GameManager.instance.State[1] > 10)
+            GameManager.instance.State[1] = 10;
 
         isGameOver = false;
 
@@ -135,7 +150,6 @@ public class TapGameManager : MonoBehaviour
 
         StartCoroutine(ReturnGame());
 
-        //StartCoroutine(UIMov());
     }
 
 

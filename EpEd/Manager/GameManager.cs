@@ -3,17 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Linq;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameObject gameObj;
+    [SerializeField] private Material background;
+    [SerializeField] private Material state;
+    [SerializeField] private GameObject GUIGameStop;
+    
+    public TextMeshPro[] GUIStateText;
+
     public static GameManager instance;
 
     public int selectLevel;
     public int reLayer = 0;
+    public int[] State;
     public string loadScene;
+    public bool gameSet;
     public bool[] clearCheck;
 
+    public Queue<string> gameQueue = new Queue<string>();
+
+    // 게임 큐
+    private List<string> gameNum = new List<string>()
+    {
+        "Gyro",
+        "DropBall",
+        "LeftRight",
+        "spinBall"
+    };
+    
     private void Awake()
     {
         Application.targetFrameRate = 60;
@@ -26,7 +48,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-
 
     private void Update()
     {
@@ -57,6 +78,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void GameStarter()
+    {
+        if (gameSet)
+        {
+            System.Random rand = new System.Random();
+            var shuffled = gameNum.OrderBy(_ => rand.Next()).ToList();
+            gameQueue = new Queue<string>(shuffled);
+
+            gameSet = false;
+        }
+
+        if (gameQueue.Count != 0)
+        {
+            NextScene(gameQueue);
+            
+            GUIGameStop.SetActive(true);
+            Time.timeScale = 0;
+        }
+        else
+            StateData.ViewState(gameObj, background, state);
+    }
+
+    public void NextScene(Queue<string> queue)
+    {
+        selectLevel = 1;
+
+        if (queue.Count > 0)
+            SceneManager.LoadScene(queue.Dequeue());
+    }
+
+    // 게임 시작 전 일시정지
+    public void GameStop()
+    {
+        GUIGameStop.SetActive(false);
+        Time.timeScale = 1;
+    }
+
     // 게임 오버시 UI 출력
     private IEnumerator GameOver(GameObject EndCanvas)
     {
@@ -73,7 +131,5 @@ public class GameManager : MonoBehaviour
 
         yield return wait;
 
-
     }
-
 }

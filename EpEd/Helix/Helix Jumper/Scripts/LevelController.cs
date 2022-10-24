@@ -18,7 +18,6 @@ public class LevelController : MonoBehaviour {
 	{
 		instance = this;
 	}
-	
 
 	public void SetScore()
 	{
@@ -37,6 +36,12 @@ public class LevelController : MonoBehaviour {
 
 	public void ReloadScene()
 	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.instance.State[5] = score / 20;
+
+        if (GameManager.instance.State[5] > 10)
+            GameManager.instance.State[5] = 10;
+
+		SceneManager.LoadScene("TitleScene");
+		//SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

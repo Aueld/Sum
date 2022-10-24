@@ -16,7 +16,7 @@ public class FollowBall : MonoBehaviour
 
     private void Update()
     {
-        vecXZ = new Vector3(ball.position.x, 10, ball.position.z);
+        vecXZ = new Vector3(ball.position.x, 24, ball.position.z);
 
         transform.position = vecXZ;
     }

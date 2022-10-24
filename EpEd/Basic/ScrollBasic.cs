@@ -10,16 +10,16 @@ namespace FSV.Scroll
 
         private void Start()
         {
-            var items = Enumerable.Range(0, 20)
-                .Select(i => new ItemData($"Gyro"))
-                .ToArray();
+            //var items = Enumerable.Range(0, 20)
+            //    .Select(i => new ItemData($"Gyro"))
+            //    .ToArray();
 
             List<ItemData> itemArray = new List<ItemData>();
 
             itemArray.Add(new ItemData($"Gyro"));
             itemArray.Add(new ItemData($"DropBall"));
             itemArray.Add(new ItemData($"LeftRight"));
-            itemArray.Add(new ItemData($"LineDraw"));
+            itemArray.Add(new ItemData($"Spinball"));
 
             scrollView.UpdateData(itemArray);
         }
