@@ -33,7 +33,9 @@ public class GameManager : MonoBehaviour
         "Gyro",
         "DropBall",
         "LeftRight",
-        "spinBall"
+        "spinBall",
+        "Memory"
+
     };
     
     private void Awake()

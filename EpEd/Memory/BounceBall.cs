@@ -11,13 +11,13 @@ public class BounceBall : MonoBehaviour
     private Transform Tr;
     private Rigidbody rb;
 
-    private Material material;
+    private MeshRenderer meshRend;
 
     private void Start()
     {
         power = 100f;
         Tr = transform;
-        material = GetComponent<Material>();
+        meshRend = GetComponent<MeshRenderer>();
     }
 
     private void OnEnable()
@@ -39,6 +39,16 @@ public class BounceBall : MonoBehaviour
     public void SetPower(float power)
     {
         this.power = power;
+    }
+
+    public bool GetTrueBall()
+    {
+        return trueBall;
+    }
+
+    public MeshRenderer GetMaterial()
+    {
+        return meshRend;
     }
 
     public void StartForce()

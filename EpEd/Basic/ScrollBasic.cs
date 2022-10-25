@@ -20,6 +20,8 @@ namespace FSV.Scroll
             itemArray.Add(new ItemData($"DropBall"));
             itemArray.Add(new ItemData($"LeftRight"));
             itemArray.Add(new ItemData($"Spinball"));
+            itemArray.Add(new ItemData($"Memory"));
+
 
             scrollView.UpdateData(itemArray);
         }
